@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呈尚策划 美团运营知识复习系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary-color: #FF9800;
+            --primary-light: #FFF3E0;
+            --primary-dark: #F57C00;
+            --secondary-color: #4CAF50;
+            --secondary-light: #E8F5E9;
+            --secondary-dark: #388E3C;
+            --accent-color: #FFC107;
+            --text-color: #333333;
+            --text-light: #666666;
+            --bg-color: #F9F9F9;
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --transition: all 0.3s ease;
+            
+            /* 渐变 */
+            --gradient-primary: linear-gradient(135deg, #FF9800, #F57C00);
+            --gradient-secondary: linear-gradient(135deg, #4CAF50, #388E3C);
+            --gradient-bg: linear-gradient(135deg, #FFF8E1, #FFF3E0);
+        }
+        
+        body {
+            background: var(--gradient-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 152, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar:hover {
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.15);
+        }
+        
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            border-radius: 0.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            box-shadow: 0 3px 10px rgba(255, 140, 0, 0.3);
+        }
+        
+        .logo-text {
+            background: linear-gradient(135deg, #FF8C00, #FFA500);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+        
+        .question-card {
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .question-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-body {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .question-body.active {
+            display: block;
+        }
+        
+        .option-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .option-marker {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .correct-option {
+            border-color: var(--secondary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .correct-option .option-marker {
+            border-color: var(--secondary-color);
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .question-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+        
+        .answer-explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 0.5rem 0.5rem 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background-color: white;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .pagination-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination-button:hover,
+        .pagination-button.active {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover::before:not(:disabled) {
+            left: 0;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #d0d0d0;
+            color: var(--text-color);
+        }
+        
+        .btn-outline:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(245, 124, 0, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 15px rgba(245, 124, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .search-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 0.5rem;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.2);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4 py-2 flex justify-center items-center">
+            <div class="flex items-center gap-3">
+                <div class="logo-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h1 class="logo-text">呈尚策划 美团运营知识复习系统</h1>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 复习工具栏 -->
+        <div class="card p-6 mb-6 transition-all duration-300">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="flex flex-col gap-2">
+                    <h2 class="text-xl font-bold">美团运营知识复习中心</h2>
+                    <p class="text-gray-600">本页面展示全部题库题目及答案，所有题目默认展开，点击题目可收起/展开</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="btn btn-outline flex items-center gap-2 px-6 py-3 rounded-lg shadow-sm hover:shadow-md">
+                        <i class="fas fa-home text-lg"></i>
+                        <span class="font-medium">返回首页</span>
+                    </a>
+                    <a href="exam.html" class="btn btn-primary flex items-center gap-2 px-6 py-3 rounded-lg shadow-md hover:shadow-lg">
+                        <i class="fas fa-pen-alt text-lg"></i>
+                        <span class="font-medium">开始考试</span>
+                    </a>
+                    <div class="relative w-64">
+                        <input type="text" id="search-input" class="search-box" placeholder="搜索题目关键词...">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 筛选选项 -->
+        <div class="flex mb-4 bg-gray-100 rounded-t-lg overflow-hidden">
+            <button class="tab-button active" data-type="all">全部题目</button>
+            <button class="tab-button" data-type="choice">选择题</button>
+            <button class="tab-button" data-type="truefalse">判断题</button>
+        </div>
+        
+        <!-- 题目列表 -->
+        <div id="question-list" class="mb-6">
+            <!-- 题目会通过JavaScript动态加载 -->
+        </div>
+        
+        <!-- 分页控制 -->
+        <div class="flex justify-between items-center">
+            <div>
+                <span class="text-gray-600">当前显示: <span id="question-range">1-10</span> / 共 <span id="total-questions">120</span> 题</span>
+            </div>
+            <div class="flex gap-2" id="pagination">
+                <!-- 页码按钮会通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 题库数据 - 这里将加载完整的题库
+            const allQuestions = [
+                // 选择题部分
+                {
+                    id: 1,
+                    type: "choice",
+                    question: "天天神券的使用有哪些限制？",
+                    options: [
+                        "每个订单可以使用多张天天神券",
+                        "天天神券可以与其他优惠券同时使用",
+                        "天天神券没有使用期限",
+                        "每个订单只能使用一张天天神券，且不能与其他优惠券同时使用"
+                    ],
+                    correct: 3,
+                    explanation: "天天神券使用限制：每个订单只能使用一张天天神券，且不能与其他优惠券同时使用。"
+                },
+                {
+                    id: 2,
+                    type: "choice",
+                    question: "美团外卖商家开通粉丝群时，设置首次进群优惠券的意义是什么？",
+                    options: [
+                        "满足平台强制要求",
+                        "提高店铺技术评分",
+                        "关系到店铺的成本和利润",
+                        "增加店铺装修分数"
+                    ],
+                    correct: 2,
+                    explanation: "设置首次进群优惠券关系到店铺的成本和利润。"
+                },
+                {
+                    id: 3,
+                    type: "choice",
+                    question: "美团外卖配送扣点的保底费用一般是多少？",
+                    options: [
+                        "2-3元",
+                        "3.5-4元",
+                        "4.5-5元",
+                        "5-6元"
+                    ],
+                    correct: 1,
+                    explanation: "美团外卖配送扣点的保底费用一般是3.5-4元。"
+                },
+                {
+                    id: 4,
+                    type: "choice",
+                    question: "美团外卖自配送方式扣点一般是多少？",
+                    options: [
+                        "1%-3%",
+                        "3%-5%",
+                        "5%-8%",
+                        "10%-15%"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖自配送方式扣点一般是5%-8%。"
+                },
+                {
+                    id: 5,
+                    type: "choice",
+                    question: "对于一款知名的冒菜连锁品牌，其加盟商需支付给美团的扣点约为多少？",
+                    options: [
+                        "8%左右",
+                        "12%左右",
+                        "18%左右",
+                        "25%左右"
+                    ],
+                    correct: 2,
+                    explanation: "知名冒菜连锁品牌加盟商需支付给美团的扣点约为18%左右。"
+                },
+                {
+                    id: 6,
+                    type: "choice",
+                    question: "美团外卖商家在设置满减活动时，需要在哪个菜单中找到相关选项？",
+                    options: [
+                        "运营管理",
+                        "满减优惠",
+                        "促销营销",
+                        "活动管理"
+                    ],
+                    correct: 1,
+                    explanation: "美团外卖商家在设置满减活动时，需要在\"满减优惠\"菜单中找到相关选项。"
+                },
+                {
+                    id: 7,
+                    type: "choice",
+                    question: "美团外卖的配送费主要受哪些因素影响？",
+                    options: [
+                        "商家评分和销量",
+                        "配送距离、夜间配送和配送方式",
+                        "菜品价格和包装费",
+                        "顾客的VIP等级"
+                    ],
+                    correct: 1,
+                    explanation: "美团外卖的配送费主要受配送距离、夜间配送和配送方式这些因素影响。"
+                },
+                {
+                    id: 8,
+                    type: "choice",
+                    question: "美团外卖点金推广采用什么计费模式？",
+                    options: [
+                        "CPM（千次曝光计费）",
+                        "CPC（点击计费）",
+                        "CPS（销售分成）",
+                        "CPT（时段计费）"
+                    ],
+                    correct: 1,
+                    explanation: "美团外卖点金推广采用CPC（点击计费）模式。"
+                },
+                {
+                    id: 9,
+                    type: "choice",
+                    question: "关于美团外卖点金推广的出价，以下说法正确的是？",
+                    options: [
+                        "应按照平台默认建议出价设置",
+                        "出价越高，转化的订单越多",
+                        "应避免出价过高，建议在建议出价的基础上上下调整找到最优出价",
+                        "新店应统一使用高出价策略"
+                    ],
+                    correct: 2,
+                    explanation: "正确的点金推广出价策略是应避免出价过高，建议在建议出价的基础上上下调整找到最优出价。"
+                },
+                {
+                    id: 10,
+                    type: "choice",
+                    question: "美团外卖点金推广的投放速度一般建议选择哪种？",
+                    options: [
+                        "快速投放",
+                        "加速投放",
+                        "匀速投放",
+                        "随机投放"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖点金推广的投放速度一般建议选择匀速投放。"
+                },
+                {
+                    id: 11,
+                    type: "choice",
+                    question: "铂金展位在美团平台的位置是？",
+                    options: [
+                        "美团首页商家列表的底部位置",
+                        "美团首页商家列表的顶部位置",
+                        "美团首页商家列表的中部位置",
+                        "美团首页商家列表的右侧位置"
+                    ],
+                    correct: 1,
+                    explanation: "铂金展位在美团首页商家列表的顶部位置。"
+                },
+                {
+                    id: 12,
+                    type: "choice",
+                    question: "铂金展位的最低消费是多少？",
+                    options: [
+                        "50元",
+                        "80元",
+                        "100元",
+                        "150元"
+                    ],
+                    correct: 2,
+                    explanation: "铂金展位的最低消费是100元。"
+                },
+                {
+                    id: 13,
+                    type: "choice",
+                    question: "以下哪类商家最适合使用铂金展位进行推广？",
+                    options: [
+                        "新开业的小型单店",
+                        "有品牌的商家",
+                        "主打低价菜品的商家",
+                        "夜宵类小店"
+                    ],
+                    correct: 1,
+                    explanation: "有品牌的商家最适合使用铂金展位进行推广。"
+                },
+                {
+                    id: 14,
+                    type: "choice",
+                    question: "与钻石展位相比，铂金展位的特点是？",
+                    options: [
+                        "铂金展位在美团首页的顶部，而钻石展位在美团首页腰部",
+                        "钻石展位在美团首页的顶部，而铂金展位在美团首页腰部",
+                        "铂金展位每日最低消费50元，钻石展位最低消费100元",
+                        "铂金展位和钻石展位位置相同，但计费方式不同"
+                    ],
+                    correct: 1,
+                    explanation: "钻石展位在美团首页的顶部，而铂金展位在美团首页腰部。"
+                },
+                {
+                    id: 15,
+                    type: "choice",
+                    question: "套餐搭配的主要作用不包括？",
+                    options: [
+                        "提高下单转化率",
+                        "提高客单价",
+                        "降低商品质量要求",
+                        "带动新品销售"
+                    ],
+                    correct: 2,
+                    explanation: "套餐搭配的主要作用包括提高下单转化率、提高客单价和带动新品销售，但不包括降低商品质量要求。"
+                },
+                {
+                    id: 16,
+                    type: "choice",
+                    question: "设计套餐时，以下哪种搭配方式不符合\"注意食品互补性\"的原则？",
+                    options: [
+                        "干配稀",
+                        "重口配清淡",
+                        "麻辣配酸甜",
+                        "辣配辣"
+                    ],
+                    correct: 3,
+                    explanation: "设计套餐时，\"辣配辣\"的搭配方式不符合\"注意食品互补性\"的原则。"
+                },
+                {
+                    id: 17,
+                    type: "choice",
+                    question: "套餐的合理定价区间应该是？",
+                    options: [
+                        "低于单品价格之和",
+                        "等于单品价格之和",
+                        "高于单品价格之和",
+                        "与单品价格无关"
+                    ],
+                    correct: 0,
+                    explanation: "套餐的合理定价区间应该是低于单品价格之和。"
+                },
+                {
+                    id: 18,
+                    type: "choice",
+                    question: "关于点金推广出价策略，以下说法正确的是？",
+                    options: [
+                        "应采用美团平台默认的建议出价",
+                        "出价应设为尽可能高，以获得最大曝光",
+                        "建议将出价调整至略低于系统提示的过低价格，取推荐出价和最低价的中位数",
+                        "新店应始终保持最高出价"
+                    ],
+                    correct: 2,
+                    explanation: "关于点金推广出价策略，建议将出价调整至略低于系统提示的过低价格，取推荐出价和最低价的中位数。"
+                },
+                {
+                    id: 19,
+                    type: "choice",
+                    question: "关于美团外卖点金推广的投放时间，以下说法正确的是？",
+                    options: [
+                        "24小时全天候开启推广",
+                        "只在高峰期开启推广",
+                        "根据经营品类确定推广时间，如晚餐类商家应在晚上开启",
+                        "随机时间段开启推广即可"
+                    ],
+                    correct: 2,
+                    explanation: "关于美团外卖点金推广的投放时间，应根据经营品类确定推广时间，如晚餐类商家应在晚上开启。"
+                },
+                {
+                    id: 20,
+                    type: "choice",
+                    question: "以下关于四件套方案制定的内容，不属于市场调研部分的是？",
+                    options: [
+                        "竞争对手分析",
+                        "用户需求调查",
+                        "套餐搭配",
+                        "市场趋势分析"
+                    ],
+                    correct: 2,
+                    explanation: "套餐搭配不属于四件套方案制定的市场调研部分。"
+                },
+                {
+                    id: 21,
+                    type: "choice",
+                    question: "三件套设计中不包括以下哪项？",
+                    options: [
+                        "统一风格",
+                        "店招设计",
+                        "配送策略",
+                        "Logo设计"
+                    ],
+                    correct: 2,
+                    explanation: "三件套设计中不包括配送策略。"
+                },
+                {
+                    id: 22,
+                    type: "choice",
+                    question: "导航栏分类优化的目标不包括以下哪项？",
+                    options: [
+                        "提升用户浏览效率",
+                        "增加商户收入",
+                        "增加菜品曝光机会",
+                        "提高整体点击率和下单转化率"
+                    ],
+                    correct: 1,
+                    explanation: "导航栏分类优化的目标不包括增加商户收入。"
+                },
+                {
+                    id: 23,
+                    type: "choice",
+                    question: "标题关键词优化的措施中，以下哪项描述不正确？",
+                    options: [
+                        "高频词挖掘",
+                        "竞品词分析",
+                        "避免使用长尾词",
+                        "核心词强化"
+                    ],
+                    correct: 2,
+                    explanation: "在标题关键词优化中，避免使用长尾词的描述是不正确的。"
+                },
+                {
+                    id: 24,
+                    type: "choice",
+                    question: "关于美团外卖商家店铺评价回复，以下哪种说法不正确？",
+                    options: [
+                        "提高评价回复率至95%以上",
+                        "对所有评价采用统一的回复模板",
+                        "将差评转化为改进机会",
+                        "分类标签管理评价内容"
+                    ],
+                    correct: 1,
+                    explanation: "关于美团外卖商家店铺评价回复，对所有评价采用统一的回复模板是不正确的说法。"
+                },
+                {
+                    id: 25,
+                    type: "choice",
+                    question: "关于美团商家店铺图片墙设计，以下哪项不是其目标？",
+                    options: [
+                        "提升店铺视觉吸引力",
+                        "强化品牌形象",
+                        "增加平台流量",
+                        "区别于同类竞争店铺"
+                    ],
+                    correct: 2,
+                    explanation: "关于美团商家店铺图片墙设计，增加平台流量不是其目标。"
+                },
+                {
+                    id: 26,
+                    type: "choice",
+                    question: "面对商家关于\"我想调整菜品价格但怕影响订单量\"的咨询，最专业的价格调整建议是？",
+                    options: [
+                        "所有菜品统一降价以吸引客流",
+                        "建议不做任何价格调整，保持稳定",
+                        "根据数据分析，针对不同菜品制定差异化价格策略",
+                        "所有菜品统一提价以提高利润"
+                    ],
+                    correct: 2,
+                    explanation: "最专业的价格调整建议是根据数据分析，针对不同菜品制定差异化价格策略。"
+                },
+                {
+                    id: 27,
+                    type: "choice",
+                    question: "精准营销发券的目标不包括？",
+                    options: [
+                        "提升新客获取率",
+                        "激活沉睡老客",
+                        "降低商品价格",
+                        "增加店铺订单量"
+                    ],
+                    correct: 2,
+                    explanation: "精准营销发券的目标不包括降低商品价格。"
+                },
+                {
+                    id: 28,
+                    type: "choice",
+                    question: "当顾客投诉吃了店里的菜后肚子不舒服时，以下哪种处理方式不恰当？",
+                    options: [
+                        "立即联系顾客表达关心和歉意",
+                        "说明店铺严格的食材采购和制作流程",
+                        "提出诚恳的补偿方案",
+                        "质疑顾客投诉动机，拒绝处理"
+                    ],
+                    correct: 3,
+                    explanation: "当顾客投诉吃了店里的菜后肚子不舒服时，质疑顾客投诉动机，拒绝处理是不恰当的处理方式。"
+                },
+                {
+                    id: 29,
+                    type: "choice",
+                    question: "当商家反馈\"最近我店里的订单量一直在下降\"时，以下哪种回复不专业？",
+                    options: [
+                        "分析平台最近推广新入驻商家导致流量分散的原因",
+                        "提出已调整排名权重参数的解决方案",
+                        "表示这是正常现象，建议商家耐心等待",
+                        "重新设计更有吸引力的主图作为改进措施"
+                    ],
+                    correct: 2,
+                    explanation: "当商家反馈订单量下降时，表示这是正常现象并建议商家耐心等待是不专业的回复方式。"
+                },
+                {
+                    id: 30,
+                    type: "choice",
+                    question: "关于美团外卖商家铂金展位投放策略，以下说法错误的是？",
+                    options: [
+                        "高端商品或高利润商品商家更适合投放铂金展位",
+                        "投放时间应避开高峰期以节约成本",
+                        "有品牌的商家做铂金展位相对更合适",
+                        "铂金展位适合结合平台大型促销活动一起投放"
+                    ],
+                    correct: 1,
+                    explanation: "关于美团外卖商家铂金展位投放策略，投放时间应避开高峰期以节约成本的说法是错误的。"
+                },
+                {
+                    id: 31,
+                    type: "choice",
+                    question: "关于商家开通天天神券的步骤，以下说法错误的是？",
+                    options: [
+                        "首先打开美团外卖商家版APP",
+                        "需要点击页面下面的\"店铺\"，然后点击\"活动报名\"",
+                        "需要设置每日库存",
+                        "无需调整神券的使用条件，系统有默认设置"
+                    ],
+                    correct: 3,
+                    explanation: "关于商家开通天天神券的步骤，无需调整神券的使用条件，系统有默认设置的说法是错误的。"
+                },
+                {
+                    id: 32,
+                    type: "choice",
+                    question: "天天神券的面值和膨胀特点是？",
+                    options: [
+                        "面值一般是10-2元，最高可膨胀至15元",
+                        "面值一般是20-4元，最高可膨胀至20元",
+                        "面值一般是30-6元，最高可膨胀至30元",
+                        "面值一般是50-10元，最高可膨胀至50元"
+                    ],
+                    correct: 1,
+                    explanation: "天天神券的面值一般是20-4元，最高可膨胀至20元。"
+                },
+                {
+                    id: 33,
+                    type: "choice",
+                    question: "美团外卖商家开通粉丝群的第一步是？",
+                    options: [
+                        "设置首次进群优惠券",
+                        "编辑群介绍和进群欢迎语",
+                        "进入消息界面",
+                        "点击创建粉丝群"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖商家开通粉丝群的第一步是进入消息界面。"
+                },
+                {
+                    id: 34,
+                    type: "choice",
+                    question: "美团外卖商家在设置满减活动时，以下哪个步骤不属于满减活动设置流程？",
+                    options: [
+                        "登录美团外卖商家平台",
+                        "在菜单中找到\"满减优惠\"选项",
+                        "设置满减条件和优惠方式",
+                        "设置菜品折扣率"
+                    ],
+                    correct: 3,
+                    explanation: "美团外卖商家在设置满减活动时，设置菜品折扣率不属于满减活动设置流程。"
+                },
+                {
+                    id: 35,
+                    type: "choice",
+                    question: "减配送费活动一般配置的金额范围是？",
+                    options: [
+                        "0.5-1元之间",
+                        "1-3元之间",
+                        "3-5元之间",
+                        "5-8元之间"
+                    ],
+                    correct: 1,
+                    explanation: "减配送费活动一般配置的金额范围是1-3元之间。"
+                },
+                {
+                    id: 36,
+                    type: "choice",
+                    question: "美团外卖夜间配送通常指的是什么时间段？",
+                    options: [
+                        "晚上六点至晚上十点",
+                        "晚上八点至凌晨两点",
+                        "晚上九点至早上七点",
+                        "晚上十点至早上六点"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖夜间配送通常指的是晚上九点至早上七点这个时间段。"
+                },
+                {
+                    id: 37,
+                    type: "choice",
+                    question: "美团外卖点金推广的基本出价原则是？",
+                    options: [
+                        "严格遵循平台推荐出价",
+                        "始终保持高于竞争对手的出价",
+                        "避免采用平台默认建议出价，应合理调整",
+                        "固定出价不变以保持稳定性"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖点金推广的基本出价原则是避免采用平台默认建议出价，应合理调整。"
+                },
+                {
+                    id: 38,
+                    type: "choice",
+                    question: "以下哪种情况适合商家做铂金展位？",
+                    options: [
+                        "新开业的单店小商家",
+                        "品牌商家需要提升知名度",
+                        "客单价较低的夜宵小吃店",
+                        "以低价策略为核心的商家"
+                    ],
+                    correct: 1,
+                    explanation: "品牌商家需要提升知名度的情况适合做铂金展位。"
+                },
+                {
+                    id: 39,
+                    type: "choice",
+                    question: "美团外卖铂金展位按照什么方式收费？",
+                    options: [
+                        "按每次点击收费",
+                        "按每次下单收费",
+                        "按千次曝光收费",
+                        "按每日固定费用收费"
+                    ],
+                    correct: 2,
+                    explanation: "美团外卖铂金展位按照千次曝光收费（CPM）方式收费。"
+                },
+                {
+                    id: 40,
+                    type: "choice",
+                    question: "套餐搭配时，以下哪种做法不恰当？",
+                    options: [
+                        "菜品、小吃、饮品搭配齐全",
+                        "考虑用餐场景选择商品",
+                        "统一使用高价优质食材",
+                        "尊重饮食传统习惯"
+                    ],
+                    correct: 2,
+                    explanation: "套餐搭配时，统一使用高价优质食材的做法不恰当。"
+                },
+                {
+                    id: 41,
+                    type: "choice",
+                    question: "设计\"阶梯式\"套餐的目的是？",
+                    options: [
+                        "增加套餐制作难度",
+                        "提高商品销量",
+                        "满足不同顾客的需求",
+                        "简化菜单设计"
+                    ],
+                    correct: 2,
+                    explanation: "设计\"阶梯式\"套餐的目的是满足不同顾客的需求。"
+                },
+                {
+                    id: 42,
+                    type: "choice",
+                    question: "店铺分类栏优化的最佳分类数量是？",
+                    options: [
+                        "3个以内",
+                        "5个左右",
+                        "8个以内",
+                        "10-15个"
+                    ],
+                    correct: 2,
+                    explanation: "店铺分类栏优化的最佳分类数量是8个以内。"
+                },
+                {
+                    id: 43,
+                    type: "choice",
+                    question: "关于店铺的\"推荐分类展示\"设置，正确的操作路径是？",
+                    options: [
+                        "美团商家版APP-店铺装修-店铺展示设置-推荐分类展示",
+                        "美团PC端后台-店铺装修-店铺展示设置-推荐分类展示",
+                        "美团商家版APP-商品管理-分类设置-推荐分类展示",
+                        "美团PC端后台-营销管理-活动设置-推荐分类展示"
+                    ],
+                    correct: 1,
+                    explanation: "关于店铺的\"推荐分类展示\"设置，正确的操作路径是美团PC端后台-店铺装修-店铺展示设置-推荐分类展示。"
+                },
+                {
+                    id: 44,
+                    type: "choice",
+                    question: "美团最新趋势中，关于营销工具优化的变化不包括？",
+                    options: [
+                        "剔除商家店铺分中\"活动丰富度\"评分模块",
+                        "取消首页商家列表中\"满减\"和\"折扣菜\"优惠展示标签",
+                        "推出\"智能营销小助手\"",
+                        "增加强制营销活动参与要求"
+                    ],
+                    correct: 3,
+                    explanation: "美团最新趋势中，关于营销工具优化的变化不包括增加强制营销活动参与要求。"
+                },
+                {
+                    id: 45,
+                    type: "choice",
+                    question: "四件套方案制定中的品牌定位设计包括哪些内容？",
+                    options: [
+                        "目标人群定位、品牌形象设计、品牌故事策划",
+                        "竞争对手分析、用户需求调查、市场趋势分析",
+                        "收集店铺所有数据信息、对店铺数据做针对性优化",
+                        "套餐搭配、福利设计"
+                    ],
+                    correct: 0,
+                    explanation: "四件套方案制定中的品牌定位设计包括目标人群定位、品牌形象设计、品牌故事策划。"
+                },
+                {
+                    id: 46,
+                    type: "choice",
+                    question: "三件套设计的主要内容是？",
+                    options: [
+                        "菜品设计、价格设计、包装设计",
+                        "统一风格、店招设计、海报设计、Logo设计",
+                        "定位设计、视觉设计、销售设计",
+                        "产品设计、服务设计、体验设计"
+                    ],
+                    correct: 1,
+                    explanation: "三件套设计的主要内容是统一风格、店招设计、海报设计、Logo设计。"
+                },
+                {
+                    id: 47,
+                    type: "choice",
+                    question: "关于菜品描述撰写的目标，以下说法错误的是？",
+                    options: [
+                        "提升菜品点击率和下单转化率",
+                        "强化菜品特色和卖点",
+                        "夸大菜品份量和效果",
+                        "提供完整的产品信息"
+                    ],
+                    correct: 2,
+                    explanation: "关于菜品描述撰写的目标，夸大菜品份量和效果的说法是错误的。"
+                },
+                {
+                    id: 48,
+                    type: "choice",
+                    question: "以下哪项不属于导航栏分类优化的措施？",
+                    options: [
+                        "数据驱动分类",
+                        "高频品类前置",
+                        "固定使用传统分类名称",
+                        "特色分类突出"
+                    ],
+                    correct: 2,
+                    explanation: "固定使用传统分类名称不属于导航栏分类优化的措施。"
+                },
+                {
+                    id: 49,
+                    type: "choice",
+                    question: "关于评价解释差评申诉的措施，以下哪项描述不正确？",
+                    options: [
+                        "回复时效管理",
+                        "情感化沟通",
+                        "统一使用标准回复模板",
+                        "问题解决导向"
+                    ],
+                    correct: 2,
+                    explanation: "关于评价解释差评申诉的措施，统一使用标准回复模板的描述是不正确的。"
+                },
+                {
+                    id: 50,
+                    type: "choice",
+                    question: "图片墙设计的措施不包括？",
+                    options: [
+                        "专业设计",
+                        "定期更新",
+                        "随机组合图片",
+                        "A/B测试"
+                    ],
+                    correct: 2,
+                    explanation: "图片墙设计的措施不包括随机组合图片。"
+                },
+                {
+                    id: 51,
+                    type: "choice",
+                    question: "关于动图设计并上线的目标，以下说法错误的是？",
+                    options: [
+                        "突破静态图片局限",
+                        "提高顾客点击率和浏览时长",
+                        "减少页面加载速度",
+                        "区别于竞争同行"
+                    ],
+                    correct: 2,
+                    explanation: "关于动图设计并上线的目标，减少页面加载速度的说法是错误的。"
+                },
+                {
+                    id: 52,
+                    type: "choice",
+                    question: "品牌故事设计的主要目标不包括？",
+                    options: [
+                        "建立顾客深层信任",
+                        "提高商品单价",
+                        "构建情感连接纽带",
+                        "打造独特市场定位"
+                    ],
+                    correct: 1,
+                    explanation: "品牌故事设计的主要目标不包括提高商品单价。"
+                },
+                {
+                    id: 53,
+                    type: "choice",
+                    question: "关于全店图设计的目标，以下说法错误的是？",
+                    options: [
+                        "打造统一视觉形象",
+                        "优化用户浏览体验",
+                        "增加系统运行速度",
+                        "建立视觉差异化优势"
+                    ],
+                    correct: 2,
+                    explanation: "关于全店图设计的目标，增加系统运行速度的说法是错误的。"
+                },
+                {
+                    id: 54,
+                    type: "choice",
+                    question: "精准营销发券的措施不包括？",
+                    options: [
+                        "客群精准划分",
+                        "差异化券策设计",
+                        "统一发放相同优惠券",
+                        "场景化发券时机"
+                    ],
+                    correct: 2,
+                    explanation: "精准营销发券的措施不包括统一发放相同优惠券。"
+                },
+                {
+                    id: 55,
+                    type: "choice",
+                    question: "每日群发话术的目标不包括？",
+                    options: [
+                        "提升商家信息获取效率",
+                        "增强商家对平台规则的理解",
+                        "扩大商户经营规模",
+                        "提高商家运营决策的及时性"
+                    ],
+                    correct: 2,
+                    explanation: "每日群发话术的目标不包括扩大商户经营规模。"
+                },
+                {
+                    id: 56,
+                    type: "choice",
+                    question: "数据周报分析的措施不包括以下哪项？",
+                    options: [
+                        "数据标准化",
+                        "可视化呈现",
+                        "隐藏同行对标数据",
+                        "多维度分析"
+                    ],
+                    correct: 2,
+                    explanation: "数据周报分析的措施不包括隐藏同行对标数据。"
+                },
+                {
+                    id: 57,
+                    type: "choice",
+                    question: "店铺分解析的目标不包括？",
+                    options: [
+                        "提升配送准时率",
+                        "将商家评分提高到90分以上",
+                        "降低商品成本",
+                        "巩固已满分指标"
+                    ],
+                    correct: 2,
+                    explanation: "店铺分解析的目标不包括降低商品成本。"
+                },
+                {
+                    id: 58,
+                    type: "choice",
+                    question: "关于新品上线的目标，以下说法错误的是？",
+                    options: [
+                        "丰富菜单结构",
+                        "提升客单价",
+                        "降低门店成本",
+                        "优化菜品利润结构"
+                    ],
+                    correct: 2,
+                    explanation: "关于新品上线的目标，降低门店成本的说法是错误的。"
+                },
+                {
+                    id: 59,
+                    type: "choice",
+                    question: "付费调试的措施不包括？",
+                    options: [
+                        "数据分析基础",
+                        "差异化出价策略",
+                        "统一固定预算",
+                        "定向投放优化"
+                    ],
+                    correct: 2,
+                    explanation: "付费调试的措施不包括统一固定预算。"
+                },
+                {
+                    id: 60,
+                    type: "choice",
+                    question: "店铺数据分析的目标不包括？",
+                    options: [
+                        "将下单转化率稳步提升至25%-30%区间",
+                        "优化店铺曝光质量",
+                        "减少平台佣金比例",
+                        "稳定提高店铺权重"
+                    ],
+                    correct: 2,
+                    explanation: "店铺数据分析的目标不包括减少平台佣金比例。"
+                },
+                {
+                    id: 61,
+                    type: "choice",
+                    question: "当商家反馈\"我的店铺刚开没多久，应该重点做些什么能快速提升知名度？\"时，以下哪种回复方式最不专业？",
+                    options: [
+                        "建议全面激活\"新店特权\"",
+                        "建议打造爆款引流",
+                        "建议等待系统自动推荐",
+                        "建议建立初期口碑"
+                    ],
+                    correct: 2,
+                    explanation: "当商家反馈\"我的店铺刚开没多久，应该重点做些什么能快速提升知名度？\"时，建议等待系统自动推荐的回复方式最不专业。"
+                },
+                {
+                    id: 62,
+                    type: "choice",
+                    question: "当商家询问\"我想调整一下菜品价格，但又怕影响订单量，有什么好建议吗？\"时，以下哪种回复最为专业？",
+                    options: [
+                        "建议维持原价，不要冒险",
+                        "建议根据菜品特点分别调整，招牌菜适当提价，配菜略微下调",
+                        "建议全面降价促销",
+                        "建议随机调整价格测试市场反应"
+                    ],
+                    correct: 1,
+                    explanation: "当商家询问\"我想调整一下菜品价格，但又怕影响订单量，有什么好建议吗？\"时，建议根据菜品特点分别调整，招牌菜适当提价，配菜略微下调的回复最为专业。"
+                },
+                {
+                    id: 63,
+                    type: "choice",
+                    question: "关于店铺装修案例中的店铺名称设置，正确的做法是？",
+                    options: [
+                        "使用独特创意的抽象名称",
+                        "名称格式为品牌名称+核心品类",
+                        "使用地名+老板姓名的组合",
+                        "越长越详细的名称越好"
+                    ],
+                    correct: 1,
+                    explanation: "关于店铺装修案例中的店铺名称设置，正确的做法是名称格式为品牌名称+核心品类。"
+                },
+                {
+                    id: 64,
+                    type: "choice",
+                    question: "关于美团点金推广的优化建议，以下哪项不正确？",
+                    options: [
+                        "根据店铺情况调整出价",
+                        "通常选择匀速投放",
+                        "应始终保持最高出价获取最大曝光",
+                        "根据经营品类确定推广时间"
+                    ],
+                    correct: 2,
+                    explanation: "关于美团点金推广的优化建议，应始终保持最高出价获取最大曝光的说法是不正确的。"
+                },
+                {
+                    id: 65,
+                    type: "choice",
+                    question: "商家应该如何面对店铺订单量下降的情况？",
+                    options: [
+                        "等待平台自动调整流量分配",
+                        "投诉平台偏向新商家",
+                        "分析原因并采取针对性措施如调整排名参数、优化主图等",
+                        "立即大幅降价促销"
+                    ],
+                    correct: 2,
+                    explanation: "商家应该面对店铺订单量下降的情况，分析原因并采取针对性措施如调整排名参数、优化主图等。"
+                },
+                {
+                    id: 66,
+                    type: "choice",
+                    question: "商家店铺新开后没有订单的原因可能包括？",
+                    options: [
+                        "商家产品质量不好",
+                        "平台展示算法调整、周边新开同类店铺、天气变化等",
+                        "商家未足额支付推广费用",
+                        "商家服务态度不好"
+                    ],
+                    correct: 1,
+                    explanation: "商家店铺新开后没有订单的原因可能包括平台展示算法调整、周边新开同类店铺、天气变化等。"
+                },
+                {
+                    id: 67,
+                    type: "choice",
+                    question: "对于商家投诉处理，以下哪种方式不恰当？",
+                    options: [
+                        "第一时间联系顾客表达关心",
+                        "说明店铺食材采购和制作流程",
+                        "直接质疑顾客投诉动机",
+                        "提出诚恳的补偿方案"
+                    ],
+                    correct: 2,
+                    explanation: "对于商家投诉处理，直接质疑顾客投诉动机的方式不恰当。"
+                },
+                {
+                    id: 68,
+                    type: "choice",
+                    question: "针对特殊节日运营的营销方案应包括哪些方面？",
+                    options: [
+                        "只需降价促销即可",
+                        "节日氛围打造、节日特别菜品、节日营销活动",
+                        "增加广告投放预算",
+                        "延长营业时间"
+                    ],
+                    correct: 1,
+                    explanation: "针对特殊节日运营的营销方案应包括节日氛围打造、节日特别菜品、节日营销活动。"
+                },
+                {
+                    id: 69,
+                    type: "choice",
+                    question: "美团外卖商家在遇到配送问题投诉时，以下哪种处理方式最恰当？",
+                    options: [
+                        "将责任推给骑手",
+                        "分析配送数据并进行系统性调整",
+                        "忽视顾客投诉",
+                        "关闭在线订单功能"
+                    ],
+                    correct: 1,
+                    explanation: "美团外卖商家在遇到配送问题投诉时，分析配送数据并进行系统性调整的处理方式最恰当。"
+                },
+                {
+                    id: 70,
+                    type: "choice",
+                    question: "天天神券满减要求的计算不含哪项？",
+                    options: [
+                        "商品现价",
+                        "打包费",
+                        "配送费",
+                        "所有优惠金额"
+                    ],
+                    correct: 2,
+                    explanation: "天天神券满减要求的计算不含配送费。"
+                },
+                
+                // 判断题部分
+                {
+                    id: 71,
+                    type: "truefalse",
+                    question: "天天神券有一定的使用期限，用户需要在有效期内使用，过期后无法使用。",
+                    isTrue: true,
+                    explanation: "天天神券确实有使用期限，用户需要在有效期内使用，过期后无法使用。"
+                },
+                {
+                    id: 72,
+                    type: "truefalse",
+                    question: "外卖店铺粉丝群目前对所有店铺全面开放，无任何限制条件。",
+                    isTrue: false,
+                    explanation: "外卖店铺粉丝群目前并非对所有店铺全面开放，存在一定的限制条件。"
+                },
+                {
+                    id: 73,
+                    type: "truefalse",
+                    question: "美团外卖佣金扣点低的为自配送商家，通常在5-8%。",
+                    isTrue: true,
+                    explanation: "美团外卖佣金扣点低的确实是自配送商家，通常在5-8%。"
+                },
+                {
+                    id: 74,
+                    type: "truefalse",
+                    question: "新客立减活动的目的是解决结算环节的流失问题。",
+                    isTrue: true,
+                    explanation: "新客立减活动的目的确实是解决结算环节的流失问题。"
+                },
+                {
+                    id: 75,
+                    type: "truefalse",
+                    question: "美团外卖配送费会根据配送距离的不同而有所变化，配送距离越远，配送费越高。",
+                    isTrue: true,
+                    explanation: "美团外卖配送费确实会根据配送距离的不同而有所变化，配送距离越远，配送费越高。"
+                },
+                {
+                    id: 76,
+                    type: "truefalse",
+                    question: "点金推广采用点击计费（CPC）模式，曝光不收取费用。",
+                    isTrue: true,
+                    explanation: "点金推广确实采用点击计费（CPC）模式，曝光不收取费用。"
+                },
+                {
+                    id: 77,
+                    type: "truefalse",
+                    question: "点金推广投放时间建议选择全天24小时投放，以获得最大曝光。",
+                    isTrue: false,
+                    explanation: "点金推广投放时间不建议选择全天24小时投放，而是应根据经营品类确定推广时间。"
+                },
+                {
+                    id: 78,
+                    type: "truefalse",
+                    question: "铂金展位在美团首页商家列表的顶部位置，流量获取优先度比较高。",
+                    isTrue: true,
+                    explanation: "铂金展位确实在美团首页商家列表的顶部位置，流量获取优先度比较高。"
+                },
+                {
+                    id: 79,
+                    type: "truefalse",
+                    question: "铂金展位最低消费50元。",
+                    isTrue: false,
+                    explanation: "铂金展位最低消费不是50元，而是100元。"
+                },
+                {
+                    id: 80,
+                    type: "truefalse",
+                    question: "钻石展位在美团首页的顶部，而铂金展位在美团首页腰部。",
+                    isTrue: true,
+                    explanation: "钻石展位确实在美团首页的顶部，而铂金展位在美团首页腰部。"
+                },
+                {
+                    id: 81,
+                    type: "truefalse",
+                    question: "套餐能有效缩短用户点餐思考的时间，可以让用户快速下单，降低下单过程中用户流失量。",
+                    isTrue: true,
+                    explanation: "套餐确实能有效缩短用户点餐思考的时间，让用户快速下单，降低下单过程中用户流失量。"
+                },
+                {
+                    id: 82,
+                    type: "truefalse",
+                    question: "套餐搭配时，最好菜品、小吃、饮品一应俱全，有吃有喝，口味丰富，营养均衡。",
+                    isTrue: true,
+                    explanation: "套餐搭配时，确实最好菜品、小吃、饮品一应俱全，有吃有喝，口味丰富，营养均衡。"
+                },
+                {
+                    id: 83,
+                    type: "truefalse",
+                    question: "套餐价格应高于单品价格之和，这样可以提高利润。",
+                    isTrue: false,
+                    explanation: "套餐价格不应高于单品价格之和，而应该低于单品价格之和，以增加吸引力。"
+                },
+                {
+                    id: 84,
+                    type: "truefalse",
+                    question: "美团最近改版后，首页商家列表的位置变得不重要了。",
+                    isTrue: false,
+                    explanation: "美团最近改版后，首页商家列表的位置依然非常重要。"
+                },
+                {
+                    id: 85,
+                    type: "truefalse",
+                    question: "分类栏优化中，菜品分类控制在8个以内为最佳。",
+                    isTrue: true,
+                    explanation: "分类栏优化中，菜品分类控制在8个以内确实为最佳。"
+                },
+                {
+                    id: 86,
+                    type: "truefalse",
+                    question: "店铺数据分析的目标是将下单转化率稳步提升至50%-60%区间。",
+                    isTrue: false,
+                    explanation: "店铺数据分析的目标不是将下单转化率稳步提升至50%-60%区间，而是25%-30%区间。"
+                },
+                {
+                    id: 87,
+                    type: "truefalse",
+                    question: "菜品描述撰写中应使用描述口感、香气和视觉的生动词汇，激发感官联想。",
+                    isTrue: true,
+                    explanation: "菜品描述撰写中确实应使用描述口感、香气和视觉的生动词汇，激发感官联想。"
+                },
+                {
+                    id: 88,
+                    type: "truefalse",
+                    question: "评价解释差评申诉的回复时效管理应设定评价回复48小时响应制度。",
+                    isTrue: false,
+                    explanation: "评价解释差评申诉的回复时效管理不应设定评价回复48小时响应制度，应该更快响应。"
+                },
+                {
+                    id: 89,
+                    type: "truefalse",
+                    question: "图片墙设计不需要考虑商家特色，使用通用模板即可。",
+                    isTrue: false,
+                    explanation: "图片墙设计需要考虑商家特色，不能仅使用通用模板。"
+                },
+                {
+                    id: 90,
+                    type: "truefalse",
+                    question: "品牌故事设计不需要基于真实情况，可以完全虚构以吸引顾客。",
+                    isTrue: false,
+                    explanation: "品牌故事设计需要基于真实情况，不应完全虚构。"
+                },
+                {
+                    id: 91,
+                    type: "truefalse",
+                    question: "精准营销发券应针对不同顾客群体设计差异化优惠券。",
+                    isTrue: true,
+                    explanation: "精准营销发券确实应针对不同顾客群体设计差异化优惠券。"
+                },
+                {
+                    id: 92,
+                    type: "truefalse",
+                    question: "每日群发话术内容应按重要性分级，核心政策变动置顶，确保关键信息优先触达。",
+                    isTrue: true,
+                    explanation: "每日群发话术内容确实应按重要性分级，核心政策变动置顶，确保关键信息优先触达。"
+                },
+                {
+                    id: 93,
+                    type: "truefalse",
+                    question: "数据周报分析不需要提供同行对标数据，避免商家攀比。",
+                    isTrue: false,
+                    explanation: "数据周报分析需要提供同行对标数据，而不是隐藏这些数据。"
+                },
+                {
+                    id: 94,
+                    type: "truefalse",
+                    question: "店铺分解析的目标包括提升配送准时率至90%以上。",
+                    isTrue: true,
+                    explanation: "店铺分解析的目标确实包括提升配送准时率至90%以上。"
+                },
+                {
+                    id: 95,
+                    type: "truefalse",
+                    question: "新品上线前不需要进行市场调研，直接根据厨师建议设计即可。",
+                    isTrue: false,
+                    explanation: "新品上线前需要进行市场调研，不能仅根据厨师建议设计。"
+                },
+                {
+                    id: 96,
+                    type: "truefalse",
+                    question: "付费调试中应设置固定出价，避免频繁调整带来的不稳定。",
+                    isTrue: false,
+                    explanation: "付费调试中不应设置固定出价，而是应该根据数据分析进行差异化出价策略。"
+                },
+                {
+                    id: 97,
+                    type: "truefalse",
+                    question: "对于商家询问\"我想把店铺转让出去\"的情况，代运营人员应该直接协助办理解约手续。",
+                    isTrue: false,
+                    explanation: "对于商家询问\"我想把店铺转让出去\"的情况，代运营人员不应该直接协助办理解约手续，而是应该了解原因并提供专业建议。"
+                },
+                {
+                    id: 98,
+                    type: "truefalse",
+                    question: "面对商家质疑\"我找你们代运营已经一周了，结果没看到一点效果\"，应分析原因并提出具体解决办法。",
+                    isTrue: true,
+                    explanation: "面对商家质疑\"我找你们代运营已经一周了，结果没看到一点效果\"，确实应分析原因并提出具体解决办法。"
+                },
+                {
+                    id: 99,
+                    type: "truefalse",
+                    question: "当顾客投诉菜品导致不适时，商家应首先质疑顾客投诉动机，保护自身声誉。",
+                    isTrue: false,
+                    explanation: "当顾客投诉菜品导致不适时，商家不应首先质疑顾客投诉动机，而是应该表达关心并了解情况。"
+                },
+                {
+                    id: 100,
+                    type: "truefalse",
+                    question: "美团外卖铂金展位适合所有类型的商家，尤其是普通单店商家。",
+                    isTrue: false,
+                    explanation: "美团外卖铂金展位不适合所有类型的商家，尤其不适合普通单店商家，而更适合有品牌的商家。"
+                },
+                {
+                    id: 101,
+                    type: "truefalse",
+                    question: "美团外卖天天神券的面值一般是20-4元，且可以进行膨胀，最高膨胀至20元。",
+                    isTrue: true,
+                    explanation: "美团外卖天天神券的面值一般确实是20-4元，且可以进行膨胀，最高膨胀至20元。"
+                },
+                {
+                    id: 102,
+                    type: "truefalse",
+                    question: "美团外卖商家设置推荐套餐时，建议将店铺内所有商品都设置为折扣商品，以增加整体销量。",
+                    isTrue: false,
+                    explanation: "美团外卖商家设置推荐套餐时，不建议将店铺内所有商品都设置为折扣商品，而是应该有选择性地设置。"
+                },
+                {
+                    id: 103,
+                    type: "truefalse",
+                    question: "套餐价格应该略低于套餐内单品价格相加之和，让用户产生\"占便宜\"的错觉，从而刺激购买行为。",
+                    isTrue: true,
+                    explanation: "套餐价格确实应该略低于套餐内单品价格相加之和，让用户产生\"占便宜\"的错觉，从而刺激购买行为。"
+                },
+                {
+                    id: 104,
+                    type: "truefalse",
+                    question: "美团外卖点金推广时，对于非商圈头部店铺，建议全天候开启点金推广以最大化曝光量。",
+                    isTrue: false,
+                    explanation: "美团外卖点金推广时，对于非商圈头部店铺，不建议全天候开启点金推广，而是应根据经营品类确定推广时间。"
+                },
+                {
+                    id: 105,
+                    type: "truefalse",
+                    question: "店铺活动调整时，应收集店铺所有数据信息，如曝光量、入店率、下单率和配送费满减活动等数据，进行针对性优化。",
+                    isTrue: true,
+                    explanation: "店铺活动调整时，确实应收集店铺所有数据信息，如曝光量、入店率、下单率和配送费满减活动等数据，进行针对性优化。"
+                },
+                {
+                    id: 106,
+                    type: "truefalse",
+                    question: "针对商家质疑代运营效果时，应直接解释平台政策问题，不需要提供具体的解决方案。",
+                    isTrue: false,
+                    explanation: "针对商家质疑代运营效果时，不应直接解释平台政策问题，而是需要提供具体的解决方案。"
+                },
+                {
+                    id: 107,
+                    type: "truefalse",
+                    question: "美团铂金展位的排序规则依据单次曝光出价和店铺综合质量进行，因此商家需要同时关注这两个方面。",
+                    isTrue: true,
+                    explanation: "美团铂金展位的排序规则确实依据单次曝光出价和店铺综合质量进行，因此商家需要同时关注这两个方面。"
+                },
+                {
+                    id: 108,
+                    type: "truefalse",
+                    question: "在处理商家差评问题时，应建立一套统一的自动回复模板，对所有差评使用相同的回复内容。",
+                    isTrue: false,
+                    explanation: "在处理商家差评问题时，不应建立一套统一的自动回复模板，而是应该针对不同情况进行个性化回复。"
+                },
+                {
+                    id: 109,
+                    type: "truefalse",
+                    question: "为商家制定节日营销方案时，应在节前一周左右开始实施，确保能充分利用节日效应。",
+                    isTrue: true,
+                    explanation: "为商家制定节日营销方案时，确实应在节前一周左右开始实施，确保能充分利用节日效应。"
+                },
+                {
+                    id: 110,
+                    type: "truefalse",
+                    question: "对于普通单店商家来说，铂金展位的单次点击成本通常比点金推广低，是更经济的推广方式。",
+                    isTrue: false,
+                    explanation: "对于普通单店商家来说，铂金展位的单次点击成本通常不比点金推广低，不是更经济的推广方式。"
+                },
+                {
+                    id: 111,
+                    type: "truefalse",
+                    question: "美团外卖商家开通天天神券后，可以随时关闭或暂停该功能。",
+                    isTrue: true,
+                    explanation: "美团外卖商家开通天天神券后，确实可以随时关闭或暂停该功能。"
+                },
+                {
+                    id: 112,
+                    type: "truefalse",
+                    question: "美团外卖商家设置满减活动时，可以同时设置多个满减档位。",
+                    isTrue: true,
+                    explanation: "美团外卖商家设置满减活动时，确实可以同时设置多个满减档位。"
+                },
+                {
+                    id: 113,
+                    type: "truefalse",
+                    question: "美团外卖点金推广的投放速度设置为\"快速投放\"时，预算会在短时间内消耗完毕。",
+                    isTrue: true,
+                    explanation: "美团外卖点金推广的投放速度设置为\"快速投放\"时，预算确实会在短时间内消耗完毕。"
+                },
+                {
+                    id: 114,
+                    type: "truefalse",
+                    question: "美团外卖商家的店铺评分中，配送评分占比最高。",
+                    isTrue: false,
+                    explanation: "美团外卖商家的店铺评分中，配送评分不是占比最高的，口味评分占比最高。"
+                },
+                {
+                    id: 115,
+                    type: "truefalse",
+                    question: "美团外卖商家可以在后台直接修改顾客的差评内容。",
+                    isTrue: false,
+                    explanation: "美团外卖商家不能在后台直接修改顾客的差评内容，只能申诉或回复。"
+                },
+                {
+                    id: 116,
+                    type: "truefalse",
+                    question: "美团外卖商家的菜品图片应尽量使用真实拍摄的图片，避免使用网络素材。",
+                    isTrue: true,
+                    explanation: "美团外卖商家的菜品图片确实应尽量使用真实拍摄的图片，避免使用网络素材。"
+                },
+                {
+                    id: 117,
+                    type: "truefalse",
+                    question: "美团外卖商家的店铺公告应该简洁明了，不超过50字为宜。",
+                    isTrue: true,
+                    explanation: "美团外卖商家的店铺公告确实应该简洁明了，不超过50字为宜。"
+                },
+                {
+                    id: 118,
+                    type: "truefalse",
+                    question: "美团外卖商家可以通过设置配送范围来控制订单量和配送成本。",
+                    isTrue: true,
+                    explanation: "美团外卖商家确实可以通过设置配送范围来控制订单量和配送成本。"
+                },
+                {
+                    id: 119,
+                    type: "truefalse",
+                    question: "美团外卖商家可以在后台设置菜品的上下架时间，实现自动化管理。",
+                    isTrue: true,
+                    explanation: "美团外卖商家确实可以在后台设置菜品的上下架时间，实现自动化管理。"
+                },
+                {
+                    id: 120,
+                    type: "truefalse",
+                    question: "美团外卖商家的评价回复率达到95%以上有助于提升店铺评分。",
+                    isTrue: true,
+                    explanation: "美团外卖商家的评价回复率达到95%以上确实有助于提升店铺评分。"
+                }
+            ];
+
+            let reviewState = {
+                currentPage: 1,
+                questionsPerPage: 10,
+                currentFilter: 'all',
+                searchQuery: '',
+                questions: [...allQuestions]
+            };
+            
+            // 初始化复习系统
+            initializeReview();
+            
+            // 初始化复习系统
+            function initializeReview() {
+                // 渲染问题列表
+                renderQuestionList();
+                
+                // 渲染分页
+                renderPagination();
+                
+                // 绑定标签切换事件
+                bindTabEvents();
+                
+                // 绑定搜索事件
+                bindSearchEvent();
+            }
+            
+            // 渲染问题列表
+            function renderQuestionList() {
+                const questionList = document.getElementById('question-list');
+                questionList.innerHTML = '';
+                
+                // 过滤问题
+                let filteredQuestions = filterQuestions();
+                
+                // 计算分页
+                const startIndex = (reviewState.currentPage - 1) * reviewState.questionsPerPage;
+                const endIndex = startIndex + reviewState.questionsPerPage;
+                const paginatedQuestions = filteredQuestions.slice(startIndex, endIndex);
+                
+                // 更新范围显示
+                document.getElementById('question-range').textContent = `${startIndex + 1}-${Math.min(endIndex, filteredQuestions.length)}`;
+                document.getElementById('total-questions').textContent = filteredQuestions.length;
+                
+                // 渲染每个问题
+                paginatedQuestions.forEach(question => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-card card transition-all duration-300';
+                    
+                    // 问题头部
+                    const questionTypeLabel = question.type === 'choice' ? '选择题' : '判断题';
+                    const headerHTML = `
+                        <div class="question-header" data-id="${question.id}">
+                            <div>
+                                <span class="question-badge">${questionTypeLabel} 第 ${question.id} 题</span>
+                                <span class="font-medium">${question.question}</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-500"></i>
+                        </div>
+                    `;
+                    
+                    // 问题内容
+                    let bodyHTML = `<div class="question-body">`;
+                    
+                    if (question.type === 'choice') {
+                        // 选择题选项
+                        bodyHTML += `
+                            <div class="options-container">
+                                ${question.options.map((option, index) => `
+                                    <div class="option-item ${index === question.correct ? 'correct-option' : ''}">
+                                        <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                                        <span>${option}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else if (question.type === 'truefalse') {
+                        // 判断题选项
+                        bodyHTML += `
+                            <div class="options-container">
+                                <div class="option-item ${question.isTrue ? 'correct-option' : ''}">
+                                    <div class="option-marker">✓</div>
+                                    <span>正确</span>
+                                </div>
+                                <div class="option-item ${!question.isTrue ? 'correct-option' : ''}">
+                                    <div class="option-marker">✗</div>
+                                    <span>错误</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // 答案解析
+                    bodyHTML += `
+                        <div class="answer-explanation">
+                            <div class="font-semibold mb-1">答案解析：</div>
+                            <div>${question.explanation}</div>
+                        </div>
+                    </div>`;
+                    
+                    questionElement.innerHTML = headerHTML + bodyHTML;
+                    questionList.appendChild(questionElement);
+                    
+                    // 获取题目体和图标元素
+                    const body = questionElement.querySelector('.question-body');
+                    const icon = questionElement.querySelector('.fa-chevron-down');
+                    
+                    // 默认展开所有题目
+                    body.classList.add('active');
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                    
+                    // 绑定点击事件
+                    const header = questionElement.querySelector('.question-header');
+                    header.addEventListener('click', () => {
+                        body.classList.toggle('active');
+                        icon.classList.toggle('fa-chevron-up');
+                        icon.classList.toggle('fa-chevron-down');
+                    });
+                });
+                
+                // 如果没有问题
+                if (paginatedQuestions.length === 0) {
+                    questionList.innerHTML = '<div class="p-8 text-center text-gray-500">没有找到匹配的题目</div>';
+                }
+            }
+            
+            // 过滤问题
+            function filterQuestions() {
+                return allQuestions.filter(question => {
+                    // 类型过滤
+                    if (reviewState.currentFilter !== 'all' && question.type !== reviewState.currentFilter) {
+                        return false;
+                    }
+                    
+                    // 搜索过滤
+                    if (reviewState.searchQuery) {
+                        const query = reviewState.searchQuery.toLowerCase();
+                        const questionText = question.question.toLowerCase();
+                        const explanation = question.explanation.toLowerCase();
+                        
+                        // 在问题或解析中搜索
+                        if (!questionText.includes(query) && !explanation.includes(query)) {
+                            // 如果是选择题，还要在选项中搜索
+                            if (question.type === 'choice') {
+                                const optionsMatch = question.options.some(option => 
+                                    option.toLowerCase().includes(query)
+                                );
+                                if (!optionsMatch) {
+                                    return false;
+                                }
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                    
+                    return true;
+                });
+            }
+            
+            // 渲染分页
+            function renderPagination() {
+                const pagination = document.getElementById('pagination');
+                pagination.innerHTML = '';
+                
+                // 过滤问题
+                const filteredQuestions = filterQuestions();
+                
+                // 计算总页数
+                const totalPages = Math.ceil(filteredQuestions.length / reviewState.questionsPerPage);
+                
+                // 上一页按钮
+                const prevButton = document.createElement('button');
+                prevButton.className = 'pagination-button';
+                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevButton.disabled = reviewState.currentPage === 1;
+                prevButton.addEventListener('click', () => {
+                    if (reviewState.currentPage > 1) {
+                        reviewState.currentPage--;
+                        renderQuestionList();
+                        renderPagination();
+                    }
+                });
+                pagination.appendChild(prevButton);
+                
+                // 页码按钮
+                const maxButtonsToShow = 5;
+                const startPage = Math.max(1, reviewState.currentPage - Math.floor(maxButtonsToShow / 2));
+                const endPage = Math.min(totalPages, startPage + maxButtonsToShow - 1);
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.className = `pagination-button ${i === reviewState.currentPage ? 'active' : ''}`;
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        reviewState.currentPage = i;
+                        renderQuestionList();
+                        renderPagination();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                    pagination.appendChild(pageButton);
+                }
+                
+                // 下一页按钮
+                const nextButton = document.createElement('button');
+                nextButton.className = 'pagination-button';
+                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextButton.disabled = reviewState.currentPage === totalPages || totalPages === 0;
+                nextButton.addEventListener('click', () => {
+                    if (reviewState.currentPage < totalPages) {
+                        reviewState.currentPage++;
+                        renderQuestionList();
+                        renderPagination();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+                pagination.appendChild(nextButton);
+            }
+            
+            // 绑定标签切换事件
+            function bindTabEvents() {
+                const tabs = document.querySelectorAll('.tab-button');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        // 移除所有激活状态
+                        tabs.forEach(t => t.classList.remove('active'));
+                        
+                        // 设置当前标签为激活状态
+                        tab.classList.add('active');
+                        
+                        // 更新过滤器
+                        reviewState.currentFilter = tab.dataset.type;
+                        reviewState.currentPage = 1;
+                        
+                        // 重新渲染
+                        renderQuestionList();
+                        renderPagination();
+                    });
+                });
+            }
+            
+            // 绑定搜索事件
+            function bindSearchEvent() {
+                const searchInput = document.getElementById('search-input');
+                
+                searchInput.addEventListener('input', () => {
+                    reviewState.searchQuery = searchInput.value.trim();
+                    reviewState.currentPage = 1;
+                    
+                    renderQuestionList();
+                    renderPagination();
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

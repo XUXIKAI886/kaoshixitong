@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呈尚策划 美团运营知识考试系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary-color: #4CAF50;
+            --primary-light: #E8F5E9;
+            --primary-dark: #388E3C;
+            --secondary-color: #4CAF50;
+            --secondary-light: #E8F5E9;
+            --secondary-dark: #388E3C;
+            --accent-color: #8BC34A;
+            --text-color: #333333;
+            --text-light: #666666;
+            --bg-color: #F9F9F9;
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --transition: all 0.3s ease;
+            
+            /* 渐变 */
+            --gradient-primary: linear-gradient(135deg, #4CAF50, #388E3C);
+            --gradient-secondary: linear-gradient(135deg, #4CAF50, #388E3C);
+            --gradient-bg: linear-gradient(135deg, #F1F8E9, #E8F5E9);
+        }
+        
+        body {
+            background: var(--gradient-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: -5%;
+            right: -5%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0) 70%);
+            z-index: -1;
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        body::after {
+            content: "";
+            position: absolute;
+            bottom: -5%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.08) 0%, rgba(76, 175, 80, 0) 70%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 20px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar:hover {
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.15);
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            box-shadow: 0 3px 10px rgba(56, 142, 60, 0.3);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .logo:hover .logo-icon {
+            transform: rotate(5deg);
+        }
+        
+        .logo-text {
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-items {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            position: relative;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-item-timer {
+            color: var(--primary-color);
+            font-weight: 600;
+            background-color: rgba(76, 175, 80, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 152, 0, 0.05), transparent 70%);
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e0e0e0;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .progress-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0) 100%);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-lg);
+            transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .question-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            border: 2px solid #e0e0e0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition-fast);
+            z-index: 0;
+        }
+        
+        .option-button:hover {
+            border-color: rgba(76, 175, 80, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .option-button:hover::before {
+            transform: translateX(0);
+        }
+        
+        .option-button.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .option-button.selected::before {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+            transform: translateX(0);
+        }
+        
+        .option-marker {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .option-button.selected .option-marker {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover::before:not(:disabled) {
+            left: 0;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #d0d0d0;
+            color: var(--text-color);
+        }
+        
+        .btn-outline:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(56, 142, 60, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 15px rgba(56, 142, 60, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--gradient-secondary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(56, 142, 60, 0.3);
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 6px 15px rgba(56, 142, 60, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .answer-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid #e0e0e0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .answer-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(76, 175, 80, 0.2), transparent);
+            transform: scale(0);
+            opacity: 0;
+            transition: var(--transition-fast);
+            z-index: 0;
+        }
+        
+        .answer-button:hover {
+            border-color: rgba(76, 175, 80, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-button:hover::before {
+            transform: scale(1.5);
+            opacity: 0.3;
+        }
+        
+        .answer-button.current {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .answer-button.answered {
+            border-color: var(--secondary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .answer-button.answered:hover {
+            background-color: rgba(76, 175, 80, 0.15);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .result-icon {
+            width: 5rem;
+            height: 5rem;
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .result-status {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+        
+        .result-status.pass {
+            color: var(--secondary-color);
+        }
+        
+        .result-status.fail {
+            color: #F44336;
+        }
+        
+        .result-detail {
+            background-color: #f5f5f5;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .answers-list {
+            text-align: left;
+            margin-top: 2rem;
+        }
+        
+        .answer-item {
+            background-color: #f5f5f5;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .answer-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .answer-correct {
+            color: var(--secondary-color);
+        }
+        
+        .answer-wrong {
+            color: #F44336;
+        }
+        
+        .answer-explanation {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .card {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+            
+            .answer-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* 修改导航栏的返回首页按钮 */
+        a.flex.items-center.justify-center.w-10.h-10.rounded-full.bg-white.border.border-green-200.text-green-500.hover\\:bg-green-50.hover\\:text-green-600.hover\\:border-green-300.transition-all.mr-2 {
+            border-color: #a5d6a7;
+            color: #4CAF50;
+        }
+        
+        a.flex.items-center.justify-center.w-10.h-10.rounded-full.bg-white.border.border-green-200.text-green-500.hover\\:bg-green-50.hover\\:text-green-600.hover\\:border-green-300.transition-all.mr-2:hover {
+            background-color: #E8F5E9;
+            color: #388E3C;
+            border-color: #81C784;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4 py-2 flex justify-center items-center">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-green-200 text-green-500 hover:bg-green-50 hover:text-green-600 hover:border-green-300 transition-all mr-2" title="返回首页">
+                    <i class="fas fa-home"></i>
+                </a>
+                <div class="logo-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h1 class="logo-text">呈尚策划 美团运营知识考试系统</h1>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 考试信息卡片 -->
+        <div class="card fade-in" style="animation-delay: 0.1s">
+            <div class="card-body">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                    <div>
+                        <h2 class="text-lg font-semibold mb-2">考试进度</h2>
+                        <div class="flex items-center gap-4 text-sm text-gray-600">
+                            <span id="question-progress">第 1 题 / 共 20 题</span>
+                            <span id="answered-count">已答题: 0</span>
+                            <span id="remaining-count">剩余: 20</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="nav-item nav-item-timer">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span id="timer">30:00</span>
+                        </div>
+                        <div class="w-48">
+                        <div class="progress-container">
+                            <div id="progress-bar" class="progress-bar" style="width: 10%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1 text-right">10%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 问题卡片 -->
+        <div id="question-container" class="card slide-in">
+            <!-- 问题内容将由JavaScript动态生成 -->
+        </div>
+        
+        <!-- 导航按钮 -->
+        <div class="button-container fade-in" style="animation-delay: 0.3s">
+            <button id="prev-btn" class="btn btn-outline" disabled>
+                <i class="fas fa-arrow-left"></i>
+                上一题
+            </button>
+            
+            <div>
+                <button id="next-btn" class="btn btn-primary">
+                    下一题
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="submit-btn" class="btn btn-success" style="display: none;">
+                    提交考试
+                </button>
+            </div>
+        </div>
+        
+        <!-- 答题卡 -->
+        <div class="card fade-in" style="animation-delay: 0.4s">
+            <div class="card-header">
+                <h3 class="font-semibold">答题卡</h3>
+            </div>
+            <div class="card-body">
+                <div id="answer-grid" class="answer-grid">
+                    <!-- 答题卡按钮将由JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 结果显示区域 -->
+        <div id="result-container" class="card" style="display: none;">
+            <div class="result-container">
+                <div class="result-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-4">考试完成！</h2>
+                <div id="result-score" class="result-score">0分</div>
+                <div id="result-status" class="result-status">评分中...</div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="result-detail bg-gray-100">
+                        <span>总题数</span>
+                        <span class="font-semibold">20题</span>
+                    </div>
+                    <div class="result-detail bg-green-50">
+                        <span>正确答案</span>
+                        <span id="correct-count" class="font-semibold text-green-600">0题</span>
+                    </div>
+                    <div class="result-detail bg-red-50">
+                        <span>错误答案</span>
+                        <span id="wrong-count" class="font-semibold text-red-600">0题</span>
+                    </div>
+                </div>
+                
+                <div class="answers-list">
+                    <h4 class="font-semibold mb-3">答案详情：</h4>
+                    <div id="answers-list">
+                        <!-- 答案详情将由JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <button id="retry-btn" class="btn btn-primary mt-6">
+                    重新考试
+                </button>
+                <a href="review.html" class="btn btn-outline mt-4 block text-center">
+                    <i class="fas fa-book mr-2"></i>
+                    返回复习模式
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 完整题库数据 - 实际项目中可引入外部JS文件
+            const fullQuestionBank = [
+  {
+    "id": 1,
+    "type": "choice",
+    "question": "天天神券的使用有哪些限制？",
+    "options": [
+                        "每个订单可以使用多张天天神券",
+                        "天天神券可以与其他优惠券同时使用",
+                        "天天神券没有使用期限",
+                        "每个订单只能使用一张天天神券，且不能与其他优惠券同时使用"
+                    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 2,
+    "type": "choice",
+    "question": "美团外卖商家开通粉丝群时，设置首次进群优惠券的意义是什么？",
+    "options": [
+      "满足平台强制要求",
+      "提高店铺技术评分",
+      "关系到店铺的成本和利润",
+      "增加店铺装修分数"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 3,
+    "type": "choice",
+    "question": "美团外卖配送扣点的保底费用一般是多少？",
+    "options": [
+                        "2-3元",
+                        "3.5-4元",
+                        "4.5-5元",
+                        "5-6元"
+                    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 4,
+    "type": "choice",
+    "question": "美团外卖自配送方式扣点一般是多少？",
+    "options": [
+      "1%-3%",
+      "3%-5%",
+      "5%-8%",
+      "10%-15%"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 5,
+    "type": "choice",
+    "question": "对于一款知名的冒菜连锁品牌，其加盟商需支付给美团的扣点约为多少？",
+    "options": [
+      "8%左右",
+      "12%左右",
+      "18%左右",
+      "25%左右"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 6,
+    "type": "choice",
+    "question": "美团外卖商家在设置满减活动时，需要在哪个菜单中找到相关选项？",
+    "options": [
+      "运营管理",
+      "满减优惠",
+      "促销营销",
+      "活动管理"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 7,
+    "type": "choice",
+    "question": "美团外卖的配送费主要受哪些因素影响？",
+    "options": [
+                        "商家评分和销量",
+                        "配送距离、夜间配送和配送方式",
+                        "菜品价格和包装费",
+                        "顾客的VIP等级"
+                    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 8,
+    "type": "choice",
+    "question": "美团外卖点金推广采用什么计费模式？",
+    "options": [
+      "CPM（千次曝光计费）",
+      "CPC（点击计费）",
+      "CPS（销售分成）",
+      "CPT（时段计费）"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 9,
+    "type": "choice",
+    "question": "关于美团外卖点金推广的出价，以下说法正确的是？",
+    "options": [
+                        "应按照平台默认建议出价设置",
+                        "出价越高，转化的订单越多",
+                        "应避免出价过高，建议在建议出价的基础上上下调整找到最优出价",
+                        "新店应统一使用高出价策略"
+                    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 10,
+    "type": "choice",
+    "question": "美团外卖点金推广的投放速度一般建议选择哪种？",
+    "options": [
+      "快速投放",
+      "加速投放",
+      "匀速投放",
+      "随机投放"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 11,
+    "type": "choice",
+    "question": "铂金展位在美团平台的位置是？",
+    "options": [
+                        "美团首页商家列表的底部位置",
+                        "美团首页商家列表的顶部位置",
+                        "美团首页商家列表的中部位置",
+                        "美团首页商家列表的右侧位置"
+                    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 12,
+    "type": "choice",
+    "question": "铂金展位的最低消费是多少？",
+    "options": [
+      "50元",
+      "80元",
+      "100元",
+      "150元"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 13,
+    "type": "choice",
+    "question": "以下哪类商家最适合使用铂金展位进行推广？",
+    "options": [
+      "新开业的小型单店",
+      "有品牌的商家",
+      "主打低价菜品的商家",
+      "夜宵类小店"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 14,
+    "type": "choice",
+    "question": "与钻石展位相比，铂金展位的特点是？",
+    "options": [
+      "铂金展位在美团首页的顶部，而钻石展位在美团首页腰部",
+      "钻石展位在美团首页的顶部，而铂金展位在美团首页腰部",
+      "铂金展位每日最低消费50元，钻石展位最低消费100元",
+      "铂金展位和钻石展位位置相同，但计费方式不同"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 15,
+    "type": "choice",
+    "question": "套餐搭配的主要作用不包括？",
+    "options": [
+                        "提高下单转化率",
+                        "提高客单价",
+                        "降低商品质量要求",
+                        "带动新品销售"
+                    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 16,
+    "type": "choice",
+    "question": "设计套餐时，以下哪种搭配方式不符合\"注意食品互补性\"的原则？",
+    "options": [
+      "干配稀",
+      "重口配清淡",
+      "麻辣配酸甜",
+      "辣配辣"
+    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 17,
+    "type": "choice",
+    "question": "套餐的合理定价区间应该是？",
+    "options": [
+      "低于单品价格之和",
+      "等于单品价格之和",
+      "高于单品价格之和",
+      "与单品价格无关"
+    ],
+    "correct": 0,
+    "explanation": "正确答案是：A. "
+  },
+  {
+    "id": 18,
+    "type": "choice",
+    "question": "关于点金推广出价策略，以下说法正确的是？",
+    "options": [
+      "应采用美团平台默认的建议出价",
+      "出价应设为尽可能高，以获得最大曝光",
+      "建议将出价调整至略低于系统提示的过低价格，取推荐出价和最低价的中位数",
+      "新店应始终保持最高出价"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 19,
+    "type": "choice",
+    "question": "关于美团外卖点金推广的投放时间，以下说法正确的是？",
+    "options": [
+      "24小时全天候开启推广",
+      "只在高峰期开启推广",
+      "根据经营品类确定推广时间，如晚餐类商家应在晚上开启",
+      "随机时间段开启推广即可"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 20,
+    "type": "choice",
+    "question": "以下关于四件套方案制定的内容，不属于市场调研部分的是？",
+    "options": [
+      "竞争对手分析",
+      "用户需求调查",
+      "套餐搭配",
+      "市场趋势分析"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 21,
+    "type": "choice",
+    "question": "三件套设计中不包括以下哪项？",
+    "options": [
+      "统一风格",
+      "店招设计",
+      "配送策略",
+      "Logo设计"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 22,
+    "type": "choice",
+    "question": "导航栏分类优化的目标不包括以下哪项？",
+    "options": [
+      "提升用户浏览效率",
+      "增加商户收入",
+      "增加菜品曝光机会",
+      "提高整体点击率和下单转化率"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 23,
+    "type": "choice",
+    "question": "标题关键词优化的措施中，以下哪项描述不正确？",
+    "options": [
+      "高频词挖掘",
+      "竞品词分析",
+      "避免使用长尾词",
+      "核心词强化"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 24,
+    "type": "choice",
+    "question": "关于美团外卖商家店铺评价回复，以下哪种说法不正确？",
+    "options": [
+      "提高评价回复率至95%以上",
+      "对所有评价采用统一的回复模板",
+      "将差评转化为改进机会",
+      "分类标签管理评价内容"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 25,
+    "type": "choice",
+    "question": "关于美团商家店铺图片墙设计，以下哪项不是其目标？",
+    "options": [
+      "提升店铺视觉吸引力",
+      "强化品牌形象",
+      "增加平台流量",
+      "区别于同类竞争店铺"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 26,
+    "type": "choice",
+    "question": "面对商家关于\"我想调整菜品价格但怕影响订单量\"的咨询，最专业的价格调整建议是？",
+    "options": [
+                        "所有菜品统一降价以吸引客流",
+                        "建议不做任何价格调整，保持稳定",
+                        "根据数据分析，针对不同菜品制定差异化价格策略",
+                        "所有菜品统一提价以提高利润"
+                    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 27,
+    "type": "choice",
+    "question": "精准营销发券的目标不包括？",
+    "options": [
+      "提升新客获取率",
+      "激活沉睡老客",
+      "降低商品价格",
+      "增加店铺订单量"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 28,
+    "type": "choice",
+    "question": "当顾客投诉吃了店里的菜后肚子不舒服时，以下哪种处理方式不恰当？",
+    "options": [
+      "立即联系顾客表达关心和歉意",
+      "说明店铺严格的食材采购和制作流程",
+      "提出诚恳的补偿方案",
+      "质疑顾客投诉动机，拒绝处理"
+    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 29,
+    "type": "choice",
+    "question": "当商家反馈\"最近我店里的订单量一直在下降\"时，以下哪种回复不专业？",
+    "options": [
+                        "分析平台最近推广新入驻商家导致流量分散的原因",
+                        "提出已调整排名权重参数的解决方案",
+                        "表示这是正常现象，建议商家耐心等待",
+                        "重新设计更有吸引力的主图作为改进措施"
+                    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 30,
+    "type": "choice",
+    "question": "关于美团外卖商家铂金展位投放策略，以下说法错误的是？",
+    "options": [
+      "高端商品或高利润商品商家更适合投放铂金展位",
+      "投放时间应避开高峰期以节约成本",
+      "有品牌的商家做铂金展位相对更合适",
+      "铂金展位适合结合平台大型促销活动一起投放"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 31,
+    "type": "choice",
+    "question": "关于商家开通天天神券的步骤，以下说法错误的是？",
+    "options": [
+      "首先打开美团外卖商家版APP",
+      "需要点击页面下面的\"店铺\"，然后点击\"活动报名\"",
+      "需要设置每日库存",
+      "无需调整神券的使用条件，系统有默认设置"
+    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 32,
+    "type": "choice",
+    "question": "天天神券的面值和膨胀特点是？",
+    "options": [
+      "面值一般是10-2元，最高可膨胀至15元",
+      "面值一般是20-4元，最高可膨胀至20元",
+      "面值一般是30-6元，最高可膨胀至30元",
+      "面值一般是50-10元，最高可膨胀至50元"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 33,
+    "type": "choice",
+    "question": "美团外卖商家开通粉丝群的第一步是？",
+    "options": [
+      "设置首次进群优惠券",
+      "编辑群介绍和进群欢迎语",
+      "进入消息界面",
+      "点击创建粉丝群"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 34,
+    "type": "choice",
+    "question": "美团外卖商家在设置满减活动时，以下哪个步骤不属于满减活动设置流程？",
+    "options": [
+      "登录美团外卖商家平台",
+      "在菜单中找到\"满减优惠\"选项",
+      "设置满减条件和优惠方式",
+      "设置菜品折扣率"
+    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 35,
+    "type": "choice",
+    "question": "减配送费活动一般配置的金额范围是？",
+    "options": [
+      "0.5-1元之间",
+      "1-3元之间",
+      "3-5元之间",
+      "5-8元之间"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 36,
+    "type": "choice",
+    "question": "美团外卖夜间配送通常指的是什么时间段？",
+    "options": [
+                        "晚上六点至晚上十点",
+                        "晚上八点至凌晨两点",
+                        "晚上九点至早上七点",
+                        "晚上十点至早上六点"
+                    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 37,
+    "type": "choice",
+    "question": "美团外卖点金推广的基本出价原则是？",
+    "options": [
+      "严格遵循平台推荐出价",
+      "始终保持高于竞争对手的出价",
+      "避免采用平台默认建议出价，应合理调整",
+      "固定出价不变以保持稳定性"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 38,
+    "type": "choice",
+    "question": "以下哪种情况适合商家做铂金展位？",
+    "options": [
+      "新开业的单店小商家",
+      "品牌商家需要提升知名度",
+      "客单价较低的夜宵小吃店",
+      "以低价策略为核心的商家"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 39,
+    "type": "choice",
+    "question": "美团外卖铂金展位按照什么方式收费？",
+    "options": [
+      "按每次点击收费",
+      "按每次下单收费",
+      "按千次曝光收费",
+      "按每日固定费用收费"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 40,
+    "type": "choice",
+    "question": "套餐搭配时，以下哪种做法不恰当？",
+    "options": [
+      "菜品、小吃、饮品搭配齐全",
+      "考虑用餐场景选择商品",
+      "统一使用高价优质食材",
+      "尊重饮食传统习惯"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 41,
+    "type": "choice",
+    "question": "设计\"阶梯式\"套餐的目的是？",
+    "options": [
+      "增加套餐制作难度",
+      "提高商品销量",
+      "满足不同顾客的需求",
+      "简化菜单设计"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 42,
+    "type": "choice",
+    "question": "店铺分类栏优化的最佳分类数量是？",
+    "options": [
+      "3个以内",
+      "5个左右",
+      "8个以内",
+      "10-15个"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 43,
+    "type": "choice",
+    "question": "关于店铺的\"推荐分类展示\"设置，正确的操作路径是？",
+    "options": [
+      "美团商家版APP-店铺装修-店铺展示设置-推荐分类展示",
+      "美团PC端后台-店铺装修-店铺展示设置-推荐分类展示",
+      "美团商家版APP-商品管理-分类设置-推荐分类展示",
+      "美团PC端后台-营销管理-活动设置-推荐分类展示"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 44,
+    "type": "choice",
+    "question": "美团最新趋势中，关于营销工具优化的变化不包括？",
+    "options": [
+      "剔除商家店铺分中\"活动丰富度\"评分模块",
+      "取消首页商家列表中\"满减\"和\"折扣菜\"优惠展示标签",
+      "推出\"智能营销小助手\"",
+      "增加强制营销活动参与要求"
+    ],
+    "correct": 3,
+    "explanation": "正确答案是：D. "
+  },
+  {
+    "id": 45,
+    "type": "choice",
+    "question": "四件套方案制定中的品牌定位设计包括哪些内容？",
+    "options": [
+      "目标人群定位、品牌形象设计、品牌故事策划",
+      "竞争对手分析、用户需求调查、市场趋势分析",
+      "收集店铺所有数据信息、对店铺数据做针对性优化",
+      "套餐搭配、福利设计"
+    ],
+    "correct": 0,
+    "explanation": "正确答案是：A. "
+  },
+  {
+    "id": 46,
+    "type": "choice",
+    "question": "三件套设计的主要内容是？",
+    "options": [
+      "菜品设计、价格设计、包装设计",
+      "统一风格、店招设计、海报设计、Logo设计",
+      "定位设计、视觉设计、销售设计",
+      "产品设计、服务设计、体验设计"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 47,
+    "type": "choice",
+    "question": "关于菜品描述撰写的目标，以下说法错误的是？",
+    "options": [
+      "提升菜品点击率和下单转化率",
+      "强化菜品特色和卖点",
+      "夸大菜品份量和效果",
+      "提供完整的产品信息"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 48,
+    "type": "choice",
+    "question": "以下哪项不属于导航栏分类优化的措施？",
+    "options": [
+      "数据驱动分类",
+      "高频品类前置",
+      "固定使用传统分类名称",
+      "特色分类突出"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 49,
+    "type": "choice",
+    "question": "关于评价解释差评申诉的措施，以下哪项描述不正确？",
+    "options": [
+      "回复时效管理",
+      "情感化沟通",
+      "统一使用标准回复模板",
+      "问题解决导向"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 50,
+    "type": "choice",
+    "question": "图片墙设计的措施不包括？",
+    "options": [
+      "专业设计",
+      "定期更新",
+      "随机组合图片",
+      "A/B测试"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 51,
+    "type": "choice",
+    "question": "关于动图设计并上线的目标，以下说法错误的是？",
+    "options": [
+      "突破静态图片局限",
+      "提高顾客点击率和浏览时长",
+      "减少页面加载速度",
+      "区别于竞争同行"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 52,
+    "type": "choice",
+    "question": "品牌故事设计的主要目标不包括？",
+    "options": [
+      "建立顾客深层信任",
+      "提高商品单价",
+      "构建情感连接纽带",
+      "打造独特市场定位"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 53,
+    "type": "choice",
+    "question": "关于全店图设计的目标，以下说法错误的是？",
+    "options": [
+      "打造统一视觉形象",
+      "优化用户浏览体验",
+      "增加系统运行速度",
+      "建立视觉差异化优势"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 54,
+    "type": "choice",
+    "question": "精准营销发券的措施不包括？",
+    "options": [
+      "客群精准划分",
+      "差异化券策设计",
+      "统一发放相同优惠券",
+      "场景化发券时机"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 55,
+    "type": "choice",
+    "question": "每日群发话术的目标不包括？",
+    "options": [
+      "提升商家信息获取效率",
+      "增强商家对平台规则的理解",
+      "扩大商户经营规模",
+      "提高商家运营决策的及时性"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 56,
+    "type": "choice",
+    "question": "数据周报分析的措施不包括以下哪项？",
+    "options": [
+      "数据标准化",
+      "可视化呈现",
+      "隐藏同行对标数据",
+      "多维度分析"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 57,
+    "type": "choice",
+    "question": "店铺分解析的目标不包括？",
+    "options": [
+      "提升配送准时率",
+      "将商家评分提高到90分以上",
+      "降低商品成本",
+      "巩固已满分指标"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 58,
+    "type": "choice",
+    "question": "关于新品上线的目标，以下说法错误的是？",
+    "options": [
+      "丰富菜单结构",
+      "提升客单价",
+      "降低门店成本",
+      "优化菜品利润结构"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 59,
+    "type": "choice",
+    "question": "付费调试的措施不包括？",
+    "options": [
+      "数据分析基础",
+      "差异化出价策略",
+      "统一固定预算",
+      "定向投放优化"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 60,
+    "type": "choice",
+    "question": "店铺数据分析的目标不包括？",
+    "options": [
+      "将下单转化率稳步提升至25%-30%区间",
+      "优化店铺曝光质量",
+      "减少平台佣金比例",
+      "稳定提高店铺权重"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 61,
+    "type": "choice",
+    "question": "当商家反馈\"我的店铺刚开没多久，应该重点做些什么能快速提升知名度？\"时，以下哪种回复方式最不专业？",
+    "options": [
+      "建议全面激活\"新店特权\"",
+      "建议打造爆款引流",
+      "建议等待系统自动推荐",
+      "建议建立初期口碑"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 62,
+    "type": "choice",
+    "question": "当商家询问\"我想调整一下菜品价格，但又怕影响订单量，有什么好建议吗？\"时，以下哪种回复最为专业？",
+    "options": [
+      "建议维持原价，不要冒险",
+      "建议根据菜品特点分别调整，招牌菜适当提价，配菜略微下调",
+      "建议全面降价促销",
+      "建议随机调整价格测试市场反应"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 63,
+    "type": "choice",
+    "question": "关于店铺装修案例中的店铺名称设置，正确的做法是？",
+    "options": [
+      "使用独特创意的抽象名称",
+      "名称格式为品牌名称+核心品类",
+      "使用地名+老板姓名的组合",
+      "越长越详细的名称越好"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 64,
+    "type": "choice",
+    "question": "关于美团点金推广的优化建议，以下哪项不正确？",
+    "options": [
+      "根据店铺情况调整出价",
+      "通常选择匀速投放",
+      "应始终保持最高出价获取最大曝光",
+      "根据经营品类确定推广时间"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 65,
+    "type": "choice",
+    "question": "商家应该如何面对店铺订单量下降的情况？",
+    "options": [
+      "等待平台自动调整流量分配",
+      "投诉平台偏向新商家",
+      "分析原因并采取针对性措施如调整排名参数、优化主图等",
+      "立即大幅降价促销"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 66,
+    "type": "choice",
+    "question": "商家店铺新开后没有订单的原因可能包括？",
+    "options": [
+      "商家产品质量不好",
+      "平台展示算法调整、周边新开同类店铺、天气变化等",
+      "商家未足额支付推广费用",
+      "商家服务态度不好"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 67,
+    "type": "choice",
+    "question": "对于商家投诉处理，以下哪种方式不恰当？",
+    "options": [
+      "第一时间联系顾客表达关心",
+      "说明店铺食材采购和制作流程",
+      "直接质疑顾客投诉动机",
+      "提出诚恳的补偿方案"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 68,
+    "type": "choice",
+    "question": "针对特殊节日运营的营销方案应包括哪些方面？",
+    "options": [
+      "只需降价促销即可",
+      "节日氛围打造、节日特别菜品、节日营销活动",
+      "增加广告投放预算",
+      "延长营业时间"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 69,
+    "type": "choice",
+    "question": "美团外卖商家在遇到配送问题投诉时，以下哪种处理方式最恰当？",
+    "options": [
+      "将责任推给骑手",
+      "分析配送数据并进行系统性调整",
+      "忽视顾客投诉",
+      "关闭在线订单功能"
+    ],
+    "correct": 1,
+    "explanation": "正确答案是：B. "
+  },
+  {
+    "id": 70,
+    "type": "choice",
+    "question": "天天神券满减要求的计算不含哪项？",
+    "options": [
+      "商品现价",
+      "打包费",
+      "配送费",
+      "所有优惠金额"
+    ],
+    "correct": 2,
+    "explanation": "正确答案是：C. "
+  },
+  {
+    "id": 71,
+    "type": "truefalse",
+    "question": "天天神券有一定的使用期限，用户需要在有效期内使用，过期后无法使用。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 72,
+    "type": "truefalse",
+    "question": "外卖店铺粉丝群目前对所有店铺全面开放，无任何限制条件。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 73,
+    "type": "truefalse",
+    "question": "美团外卖佣金扣点低的为自配送商家，通常在5-8%。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 74,
+    "type": "truefalse",
+    "question": "新客立减活动的目的是解决结算环节的流失问题。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 75,
+    "type": "truefalse",
+    "question": "美团外卖配送费会根据配送距离的不同而有所变化，配送距离越远，配送费越高。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 76,
+    "type": "truefalse",
+    "question": "点金推广采用点击计费（CPC）模式，曝光不收取费用。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 77,
+    "type": "truefalse",
+    "question": "点金推广投放时间建议选择全天24小时投放，以获得最大曝光。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 78,
+    "type": "truefalse",
+    "question": "铂金展位在美团首页商家列表的顶部位置，流量获取优先度比较高。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 79,
+    "type": "truefalse",
+    "question": "铂金展位最低消费50元。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 80,
+    "type": "truefalse",
+    "question": "钻石展位在美团首页的顶部，而铂金展位在美团首页腰部。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 81,
+    "type": "truefalse",
+    "question": "套餐能有效缩短用户点餐思考的时间，可以让用户快速下单，降低下单过程中用户流失量。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 82,
+    "type": "truefalse",
+    "question": "套餐搭配时，最好菜品、小吃、饮品一应俱全，有吃有喝，口味丰富，营养均衡。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 83,
+    "type": "truefalse",
+    "question": "套餐价格应高于单品价格之和，这样可以提高利润。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 84,
+    "type": "truefalse",
+    "question": "美团最近改版后，首页商家列表的位置变得不重要了。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 85,
+    "type": "truefalse",
+    "question": "分类栏优化中，菜品分类控制在8个以内为最佳。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 86,
+    "type": "truefalse",
+    "question": "店铺数据分析的目标是将下单转化率稳步提升至50%-60%区间。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 87,
+    "type": "truefalse",
+    "question": "菜品描述撰写中应使用描述口感、香气和视觉的生动词汇，激发感官联想。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 88,
+    "type": "truefalse",
+    "question": "评价解释差评申诉的回复时效管理应设定评价回复48小时响应制度。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 89,
+    "type": "truefalse",
+    "question": "图片墙设计不需要考虑商家特色，使用通用模板即可。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 90,
+    "type": "truefalse",
+    "question": "品牌故事设计不需要基于真实情况，可以完全虚构以吸引顾客。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 91,
+    "type": "truefalse",
+    "question": "精准营销发券应针对不同顾客群体设计差异化优惠券。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 92,
+    "type": "truefalse",
+    "question": "每日群发话术内容应按重要性分级，核心政策变动置顶，确保关键信息优先触达。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 93,
+    "type": "truefalse",
+    "question": "数据周报分析不需要提供同行对标数据，避免商家攀比。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 94,
+    "type": "truefalse",
+    "question": "店铺分解析的目标包括提升配送准时率至90%以上。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 95,
+    "type": "truefalse",
+    "question": "新品上线前不需要进行市场调研，直接根据厨师建议设计即可。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 96,
+    "type": "truefalse",
+    "question": "付费调试中应设置固定出价，避免频繁调整带来的不稳定。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 97,
+    "type": "truefalse",
+    "question": "对于商家询问\"我想把店铺转让出去\"的情况，代运营人员应该直接协助办理解约手续。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 98,
+    "type": "truefalse",
+    "question": "面对商家质疑\"我找你们代运营已经一周了，结果没看到一点效果\"，应分析原因并提出具体解决办法。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 99,
+    "type": "truefalse",
+    "question": "当顾客投诉菜品导致不适时，商家应首先质疑顾客投诉动机，保护自身声誉。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 100,
+    "type": "truefalse",
+    "question": "美团外卖铂金展位适合所有类型的商家，尤其是普通单店商家。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 101,
+    "type": "truefalse",
+    "question": "美团外卖天天神券的面值一般是20-4元，且可以进行膨胀，最高膨胀至20元。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 102,
+    "type": "truefalse",
+    "question": "美团外卖商家设置推荐套餐时，建议将店铺内所有商品都设置为折扣商品，以增加整体销量。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 103,
+    "type": "truefalse",
+    "question": "套餐价格应该略低于套餐内单品价格相加之和，让用户产生\"占便宜\"的错觉，从而刺激购买行为。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 104,
+    "type": "truefalse",
+    "question": "美团外卖点金推广时，对于非商圈头部店铺，建议全天候开启点金推广以最大化曝光量。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 105,
+    "type": "truefalse",
+    "question": "店铺活动调整时，应收集店铺所有数据信息，如曝光量、入店率、下单率和配送费满减活动等数据，进行针对性优化。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 106,
+    "type": "truefalse",
+    "question": "针对商家质疑代运营效果时，应直接解释平台政策问题，不需要提供具体的解决方案。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 107,
+    "type": "truefalse",
+    "question": "美团铂金展位的排序规则依据单次曝光出价和店铺综合质量进行，因此商家需要同时关注这两个方面。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 108,
+    "type": "truefalse",
+    "question": "在处理商家差评问题时，应建立一套统一的自动回复模板，对所有差评使用相同的回复内容。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  },
+  {
+    "id": 109,
+    "type": "truefalse",
+    "question": "为商家制定节日营销方案时，应在节前一周左右开始实施，确保能充分利用节日效应。",
+    "isTrue": true,
+    "explanation": "该题目的正确答案是：正确. "
+  },
+  {
+    "id": 110,
+    "type": "truefalse",
+    "question": "对于普通单店商家来说，铂金展位的单次点击成本通常比点金推广低，是更经济的推广方式。",
+    "isTrue": false,
+    "explanation": "该题目的正确答案是：错误. "
+  }
+];
+
+// 导出题库         // 随机抽取20道题，保持选择题和判断题的比例
+            function getRandomQuestions() {
+                // 将题目按类型分组
+                const choiceQuestions = fullQuestionBank.filter(q => q.type === 'choice');
+                const truefalseQuestions = fullQuestionBank.filter(q => q.type === 'truefalse');
+                
+                // 随机排序函数
+                const shuffleArray = (array) => {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                };
+                
+                // 随机打乱两类题目
+                const shuffledChoice = shuffleArray([...choiceQuestions]);
+                const shuffledTrueFalse = shuffleArray([...truefalseQuestions]);
+                
+                // 根据要求选择题目（15道选择题，5道判断题）
+                const choiceCount = Math.min(15, choiceQuestions.length); // 15道选择题（如果题库足够）
+                const truefalseCount = Math.min(5, truefalseQuestions.length); // 5道判断题（如果题库足够）
+                
+                // 选取指定数量的题目
+                const selectedChoice = shuffledChoice.slice(0, choiceCount);
+                const selectedTrueFalse = shuffledTrueFalse.slice(0, truefalseCount);
+                
+                // 合并两类题目
+                const combinedQuestions = [...selectedChoice, ...selectedTrueFalse];
+                
+                // 再次随机打乱题目顺序
+                shuffleArray(combinedQuestions);
+                
+                // 重新编号
+                combinedQuestions.forEach((q, index) => {
+                    q.id = index + 1;
+                });
+                
+                return combinedQuestions;
+            }
+            
+            // 考试题目数据 - 随机抽取
+            const questions = getRandomQuestions();
+            
+            // 考试状态
+            let examState = {
+                currentQuestion: 0,
+                answers: {},
+                timeLeft: 1800, // 30分钟
+                isSubmitted: false
+            };
+            
+            // DOM元素
+            const questionContainer = document.getElementById('question-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const answerGrid = document.getElementById('answer-grid');
+            const resultContainer = document.getElementById('result-container');
+            const timer = document.getElementById('timer');
+            const progressBar = document.getElementById('progress-bar');
+            const questionProgress = document.getElementById('question-progress');
+            const answeredCount = document.getElementById('answered-count');
+            const remainingCount = document.getElementById('remaining-count');
+            const retryBtn = document.getElementById('retry-btn');
+            
+            // 初始化
+            initializeExam();
+            
+            // 初始化考试
+            function initializeExam() {
+                // 更新题目进度信息
+                document.querySelector('#question-progress').textContent = `第 1 题 / 共 ${questions.length} 题`;
+                document.querySelector('#remaining-count').textContent = `剩余: ${questions.length}`;
+                
+                // 渲染答题卡
+                renderAnswerGrid();
+                
+                // 渲染当前问题
+                renderCurrentQuestion();
+                
+                // 更新UI
+                updateUI();
+                
+                // 启动计时器
+                startTimer();
+            }
+            
+            // 渲染答题卡
+            function renderAnswerGrid() {
+                answerGrid.innerHTML = '';
+                
+                for (let i = 0; i < questions.length; i++) {
+                    const button = document.createElement('button');
+                    button.className = 'answer-button';
+                    button.textContent = i + 1;
+                    button.addEventListener('click', () => navigateToQuestion(i));
+                    
+                    // 添加到答题卡
+                    answerGrid.appendChild(button);
+                }
+                
+                updateAnswerGrid();
+            }
+            
+            // 更新答题卡
+            function updateAnswerGrid() {
+                const buttons = answerGrid.querySelectorAll('.answer-button');
+                
+                buttons.forEach((button, index) => {
+                    // 清除所有类
+                    button.classList.remove('current', 'answered');
+                    
+                    // 设置当前问题
+                    if (index === examState.currentQuestion) {
+                        button.classList.add('current');
+                    }
+                    
+                    // 设置已回答问题
+                    if (examState.answers[index] !== undefined) {
+                        button.classList.add('answered');
+                    }
+                });
+            }
+            
+            // 渲染当前问题
+            function renderCurrentQuestion() {
+                const question = questions[examState.currentQuestion];
+                let questionTypeLabel = question.type === 'choice' ? '选择题' : '判断题';
+                let pointsValue = '5分';
+                
+                // 问题头部内容
+                let headerHTML = `
+                    <div class="card-header">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="question-badge">${questionTypeLabel} 第 ${question.id} 题</span>
+                                <span class="text-orange-500 font-medium">(${pointsValue})</span>
+                            </div>
+                            ${examState.answers[examState.currentQuestion] !== undefined ? 
+                                '<i class="fas fa-check-circle text-green-500"></i>' : ''}
+                        </div>
+                        <h2 class="question-title">${question.question}</h2>
+                    </div>
+                `;
+                
+                // 根据题目类型渲染不同的选项
+                let bodyHTML = '';
+                
+                if (question.type === 'choice') {
+                    // 选择题选项
+                    bodyHTML = `
+                        <div class="card-body">
+                            <div class="options-container">
+                                ${question.options.map((option, index) => `
+                                    <button class="option-button ${examState.answers[examState.currentQuestion] === index ? 'selected' : ''}" 
+                                            data-index="${index}">
+                                        <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                                        <span>${option}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else if (question.type === 'truefalse') {
+                    // 判断题选项
+                    bodyHTML = `
+                        <div class="card-body">
+                            <div class="options-container">
+                                <button class="option-button ${examState.answers[examState.currentQuestion] === 1 ? 'selected' : ''}" 
+                                        data-index="1">
+                                    <div class="option-marker">✓</div>
+                                    <span>正确</span>
+                                </button>
+                                <button class="option-button ${examState.answers[examState.currentQuestion] === 0 ? 'selected' : ''}" 
+                                        data-index="0">
+                                    <div class="option-marker">✗</div>
+                                    <span>错误</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                questionContainer.innerHTML = headerHTML + bodyHTML;
+                
+                // 添加选项点击事件
+                const optionButtons = questionContainer.querySelectorAll('.option-button');
+                optionButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const index = parseInt(button.dataset.index);
+                        selectAnswer(index);
+                    });
+                });
+            }
+            
+            // 选择答案
+            function selectAnswer(index) {
+                examState.answers[examState.currentQuestion] = index;
+                
+                // 更新UI
+                updateUI();
+                
+                // 自动跳转到下一题
+                if (examState.currentQuestion < questions.length - 1) {
+                    setTimeout(() => {
+                        navigateToQuestion(examState.currentQuestion + 1);
+                    }, 300);
+                }
+            }
+            
+            // 导航到指定问题
+            function navigateToQuestion(index) {
+                examState.currentQuestion = index;
+                
+                // 渲染当前问题
+                renderCurrentQuestion();
+                
+                // 更新UI
+                updateUI();
+            }
+            
+            // 更新UI
+            function updateUI() {
+                // 更新进度条
+                const progress = ((examState.currentQuestion + 1) / questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                document.querySelector('.text-right').textContent = `${Math.round(progress)}%`;
+                
+                // 更新问题进度
+                questionProgress.textContent = `第 ${examState.currentQuestion + 1} 题 / 共 ${questions.length} 题`;
+                
+                // 更新已答题数量
+                const answered = Object.keys(examState.answers).length;
+                answeredCount.textContent = `已答题: ${answered}`;
+                remainingCount.textContent = `剩余: ${questions.length - answered}`;
+                
+                // 更新按钮状态
+                prevBtn.disabled = examState.currentQuestion === 0;
+                
+                // 显示/隐藏下一题和提交按钮
+                if (examState.currentQuestion === questions.length - 1) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                    submitBtn.disabled = answered < questions.length;
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+                
+                // 更新答题卡
+                updateAnswerGrid();
+            }
+            
+            // 启动计时器
+            function startTimer() {
+                const timerInterval = setInterval(() => {
+                    if (examState.timeLeft > 0 && !examState.isSubmitted) {
+                        examState.timeLeft--;
+                        updateTimer();
+                    } else if (examState.timeLeft === 0 && !examState.isSubmitted) {
+                        clearInterval(timerInterval);
+                        submitExam();
+                    }
+                }, 1000);
+                
+                updateTimer();
+            }
+            
+            // 更新计时器
+            function updateTimer() {
+                const minutes = Math.floor(examState.timeLeft / 60);
+                const seconds = examState.timeLeft % 60;
+                timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // 提交考试
+            function submitExam() {
+                examState.isSubmitted = true;
+                
+                // 计算得分
+                let correctCount = 0;
+                let totalPoints = 0;
+                const pointsPerQuestion = 5; // 每题5分
+                
+                for (let i = 0; i < questions.length; i++) {
+                    const question = questions[i];
+                    
+                    if (question.type === 'choice') {
+                        // 选择题判分
+                        if (examState.answers[i] === question.correct) {
+                            correctCount++;
+                            totalPoints += pointsPerQuestion;
+                        }
+                    } else if (question.type === 'truefalse') {
+                        // 判断题判分（1表示正确，0表示错误）
+                        const isAnswerTrue = examState.answers[i] === 1;
+                        if (isAnswerTrue === question.isTrue) {
+                            correctCount++;
+                            totalPoints += pointsPerQuestion;
+                        }
+                    }
+                }
+                
+                const score = totalPoints; // 直接使用总得分
+                
+                // 更新结果
+                document.getElementById('result-score').textContent = `${score}分`;
+                document.getElementById('correct-count').textContent = `${correctCount}题`;
+                document.getElementById('wrong-count').textContent = `${questions.length - correctCount}题`;
+                
+                // 更新通过状态
+                const resultStatus = document.getElementById('result-status');
+                if (score >= 80) { // 80分及格（总分100分）
+                    resultStatus.textContent = '恭喜！您已通过考试';
+                    resultStatus.className = 'result-status pass';
+                } else {
+                    resultStatus.textContent = '很遗憾，您未达到及格线（80分）';
+                    resultStatus.className = 'result-status fail';
+                }
+                
+                // 渲染答案详情
+                const answersList = document.getElementById('answers-list');
+                answersList.innerHTML = '';
+                
+                for (let i = 0; i < questions.length; i++) {
+                    const question = questions[i];
+                    const userAnswer = examState.answers[i];
+                    let isCorrect = false;
+                    let correctAnswerText = '';
+                    let userAnswerText = '';
+                    
+                    if (question.type === 'choice') {
+                        // 选择题答案展示
+                        isCorrect = userAnswer === question.correct;
+                        correctAnswerText = `${String.fromCharCode(65 + question.correct)} (${question.options[question.correct]})`;
+                        
+                        if (!isCorrect && userAnswer !== undefined) {
+                            userAnswerText = `${String.fromCharCode(65 + userAnswer)} (${question.options[userAnswer]})`;
+                        }
+                    } else if (question.type === 'truefalse') {
+                        // 判断题答案展示
+                        const isAnswerTrue = userAnswer === 1;
+                        isCorrect = isAnswerTrue === question.isTrue;
+                        correctAnswerText = question.isTrue ? '正确' : '错误';
+                        
+                        if (!isCorrect && userAnswer !== undefined) {
+                            userAnswerText = userAnswer === 1 ? '正确' : '错误';
+                        }
+                    }
+                    
+                    const listItem = document.createElement('div');
+                    listItem.className = 'answer-item';
+                    
+                    const questionTypeLabel = question.type === 'choice' ? '【选择题】' : '【判断题】';
+                    const pointsValue = isCorrect ? '+5分' : '0分';
+                    
+                    listItem.innerHTML = `
+                        <div class="answer-item-header">
+                            <span class="${isCorrect ? 'answer-correct' : 'answer-wrong'}">
+                                ${questionTypeLabel} ${question.id}. ${isCorrect ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}
+                                <span class="text-orange-500 font-medium ml-2">(${pointsValue})</span>
+                            </span>
+                            <span>正确答案: ${correctAnswerText}</span>
+                        </div>
+                        ${!isCorrect && userAnswer !== undefined ? `<div class="text-red-500">您的答案: ${userAnswerText}</div>` : ''}
+                        <div class="answer-explanation">${question.explanation}</div>
+                    `;
+                    
+                    answersList.appendChild(listItem);
+                }
+                
+                // 显示结果
+                questionContainer.style.display = 'none';
+                resultContainer.style.display = 'block';
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'none';
+            }
+            
+            // 按钮事件
+            prevBtn.addEventListener('click', () => {
+                if (examState.currentQuestion > 0) {
+                    navigateToQuestion(examState.currentQuestion - 1);
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (examState.currentQuestion < questions.length - 1) {
+                    navigateToQuestion(examState.currentQuestion + 1);
+                }
+            });
+            
+            submitBtn.addEventListener('click', submitExam);
+            
+            retryBtn.addEventListener('click', () => {
+                // 重置考试状态
+                examState = {
+                    currentQuestion: 0,
+                    answers: {},
+                    timeLeft: 1800,
+                    isSubmitted: false
+                };
+                
+                // 重新随机抽题
+                questions.length = 0;
+                Array.prototype.push.apply(questions, getRandomQuestions());
+                
+                // 显示问题容器
+                questionContainer.style.display = 'block';
+                resultContainer.style.display = 'none';
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+                
+                // 重新初始化考试
+                initializeExam();
+            });
+        });
+    </script>
+</body>
+</html>
