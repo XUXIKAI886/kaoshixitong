@@ -455,7 +455,8 @@
             height: 2.5rem;
             border-radius: var(--border-radius-sm);
             border: 2px solid #e0e0e0;
-            background-color: white;
+            background-color: #f5f5f5;
+            color: #666666;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -492,22 +493,31 @@
         }
         
         .answer-button.current {
-            border-color: var(--primary-color);
-            background-color: var(--primary-color);
+            border-color: #FF9800;
+            background-color: #FFB74D;
             color: white;
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
             transform: translateY(-2px) scale(1.05);
         }
         
         .answer-button.answered {
-            border-color: var(--secondary-color);
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--secondary-color);
+            border-color: var(--primary-dark);
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
         }
         
         .answer-button.answered:hover {
-            background-color: rgba(76, 175, 80, 0.15);
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+            background-color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+        
+        /* 当前题目且已答题的特殊样式 */
+        .answer-button.current.answered {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #4CAF50, #FF9800);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3), 0 2px 8px rgba(76, 175, 80, 0.3);
         }
         
         .result-container {
@@ -1087,7 +1097,7 @@
   {
     "id": 25,
     "type": "choice",
-    "question": "关于美团商家店铺图片墙设计，以下哪项不是其目标？",
+    "question": "关于美团外卖商家店铺图片墙设计，以下哪项不是其目标？",
     "options": [
       "提升店铺视觉吸引力",
       "强化品牌形象",
